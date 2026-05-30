@@ -18,6 +18,7 @@
 |---|---|
 | [docs/SPEC.md](docs/SPEC.md) | Полная продуктовая и инженерная спецификация |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Архитектура Windows-клиента, модули, threading, native boundaries |
+| [docs/WINDOWS_NATIVE_SPEC.md](docs/WINDOWS_NATIVE_SPEC.md) | Специфика Windows 10/11: lifecycle, окна, notifications, taskbar, DPI, accessibility и fallback-режимы |
 | [docs/API_CONTRACTS.md](docs/API_CONTRACTS.md) | Контракты Core/chat/storage/calls runtime, которые потребляет Windows |
 | [docs/SECURITY.md](docs/SECURITY.md) | Auth, token storage, E2EE, local data protection и notification privacy |
 | [docs/UI_UX_SPEC.md](docs/UI_UX_SPEC.md) | Windows UX, IA, экраны, keyboard, accessibility |

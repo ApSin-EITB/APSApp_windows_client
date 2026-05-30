@@ -21,6 +21,11 @@
   - Проверка: UI smoke test открывает каждый route.
   - Файлы: `src/APSApp.Windows`.
 
+- [ ] Задача: добавить Windows platform adapters skeleton.
+  - Приемка: существуют interfaces для activation, windowing, notifications, protected secrets, file interaction, packaging info и accessibility diagnostics.
+  - Проверка: unit tests на fake adapters и manual smoke single-instance launch.
+  - Файлы: `src/APSApp.Windows`, `src/APSApp.Client.Infrastructure`, `tests/*`.
+
 - [ ] Задача: добавить CI workflow.
   - Приемка: restore/build/test выполняются на PR.
   - Проверка: GitHub Actions green.
@@ -163,9 +168,14 @@
 ## Phase 9 - Packaging и release
 
 - [ ] Задача: MSIX packaging.
-  - Приемка: signed package installs and upgrades.
-  - Проверка: Windows 10/11 install/upgrade QA.
+  - Приемка: signed package installs and upgrades; Windows 11 Tier A и Windows 10 22H2 Tier B paths documented.
+  - Проверка: Windows 11 install/upgrade QA и Windows 10 compatibility QA.
   - Файлы: packaging project, CI.
+
+- [ ] Задача: Windows-native hardening.
+  - Приемка: single-instance activation, taskbar badge, notification activation, DPI/multi-monitor, High Contrast, Narrator и keyboard-only gates покрыты.
+  - Проверка: `QA_STRATEGY.md` Windows-native matrix с evidence.
+  - Файлы: `src/APSApp.Windows`, `src/APSApp.Client.Infrastructure`, QA summaries.
 
 - [ ] Задача: feedback/diagnostics.
   - Приемка: sanitized report with optional screenshot uploads through core backend.

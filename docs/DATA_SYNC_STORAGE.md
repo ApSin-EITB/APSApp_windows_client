@@ -14,6 +14,19 @@
 | App-private cache | media previews, playback temp files и upload payloads | app-private + cache policy |
 | Logs | redacted diagnostics | bounded retention |
 
+## Windows storage profile
+
+Windows-клиент должен учитывать packaged MSIX identity и desktop file system behavior:
+
+- Release package хранит данные в app-specific local app data, связанной с MSIX identity.
+- Unpackaged dev run может иметь другой local app data path; миграции между dev и release не считаются пользовательским upgrade path.
+- Tokens, refresh secrets, local master keys и device secrets не лежат в SQLite/plain settings.
+- Local master key защищается через DPAPI current-user scope или Credential Locker-backed secret.
+- Database/cache filenames не должны включать raw account identifiers, email, nickname или backend IDs.
+- Paths с пробелами, кириллицей, emoji и длинными именами файлов должны проходить tests.
+- Если Windows long path policy отключена, app обязан корректно fail-ить слишком длинные external paths и предлагать user-facing retry/copy path, а не падать.
+- App не должен писать decrypted media в Downloads/Desktop без явного `Save as`.
+
 ## Message persistence
 
 Persist:
@@ -160,6 +173,9 @@ Windows specifics:
 - Detect metered network, если Windows это exposes.
 - Apply cache eviction in background без блокировки UI.
 - Не удалять currently playing/open files до close.
+- Temp decrypted playback files лежат только в app-private cache и удаляются по close/timeout/cache policy.
+- MSIX upgrade не должен терять DB, protected keys и cache metadata без явного migration decision.
+- Clear cache не удаляет tokens, direct keys, local master key или DB rows, необходимые для sync consistency.
 
 ## Migrations
 

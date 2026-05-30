@@ -6,6 +6,7 @@
 
 - [SPEC.md](SPEC.md) - полная продуктовая и инженерная спецификация.
 - [ARCHITECTURE.md](ARCHITECTURE.md) - архитектура и технические границы Windows-клиента.
+- [WINDOWS_NATIVE_SPEC.md](WINDOWS_NATIVE_SPEC.md) - нативное поведение Windows 10/11, уровни поддержки, lifecycle, shell, notifications, DPI и accessibility.
 - [API_CONTRACTS.md](API_CONTRACTS.md) - backend/runtime контракты, которые потребляет Windows-клиент.
 - [SECURITY.md](SECURITY.md) - threat model, секреты, токены, E2EE и защита локальных данных.
 - [UI_UX_SPEC.md](UI_UX_SPEC.md) - IA Windows-клиента и screen-level UX.
@@ -19,6 +20,7 @@
 
 - [decisions/ADR-001-windows-client-stack.md](decisions/ADR-001-windows-client-stack.md)
 - [decisions/ADR-002-packaging-and-updates.md](decisions/ADR-002-packaging-and-updates.md)
+- [decisions/ADR-003-windows-support-tiers.md](decisions/ADR-003-windows-support-tiers.md)
 
 ## Каноничные upstream-источники
 

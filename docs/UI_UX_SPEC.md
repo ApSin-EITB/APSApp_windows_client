@@ -6,6 +6,22 @@
 
 Windows-клиент должен ощущаться как серьезный native desktop messenger, а не как растянутый phone app. Он сохраняет product model APSApp, но использует desktop strengths: persistent panes, keyboard navigation, hover/context menus, drag-and-drop attachments, native notifications и resize-aware layout.
 
+Подробные Windows 10/11 правила: [WINDOWS_NATIVE_SPEC.md](WINDOWS_NATIVE_SPEC.md).
+
+## Windows 10/11 native UX
+
+Windows 11 является основной UX-целью. Windows 10 22H2 поддерживается как compatibility tier с fallback-ами.
+
+| Area | Windows 11 | Windows 10 |
+|---|---|---|
+| Backdrop | Mica/Mica Alt для long-lived windows where readable | Acrylic или solid theme brush |
+| Title bar | Integrated/custom title bar с system caption controls | Standard/custom title bar без Mica dependency |
+| Layout | Snap-friendly min sizes, multi-pane desktop first | Та же IA, без Windows 11-only assumptions |
+| Notifications | App notifications + badge + activation | То же, если packaged/app identity позволяет; иначе documented fallback |
+| Accessibility | Narrator, High Contrast, text scaling, keyboard-only | Та же QA matrix |
+
+Нельзя делать core functionality зависимой от Mica, rounded corners, Snap flyout или других Windows 11-only visual affordances.
+
 ## Top-level IA
 
 Top-level surfaces:
@@ -73,6 +89,7 @@ Actions:
 - create group/channel;
 - accept/reject contact request;
 - context menu: pin, mute presets, rename/local alias where allowed, add contact, profile, delete/hide и tab assignment where implemented.
+- taskbar unread badge отражает aggregate unread count, но не заменяет in-app unread state.
 
 ### Search / discovery
 
@@ -134,6 +151,7 @@ Timeline:
 - send/cancel actions;
 - max 10 attachment drafts;
 - send-as-original для still images.
+- native file picker/save picker для open/save сценариев; drag/drop и paste не должны freeze-ить UI.
 
 Правила:
 
@@ -206,6 +224,7 @@ Windows-only interpretation:
 - Battery optimization screen omitted или заменен на Windows startup/background permission diagnostics, только если есть реальная Windows setting.
 - Screenshot privacy использует доступные Windows APIs/policies; если точная Android `FLAG_SECURE` parity невозможна, UI честно сообщает ограничения, а security doc обновляется.
 - Windows Hello можно использовать как local unlock helper, если доступен.
+- Windows 10 получает честный fallback там, где Windows 11-only APIs/materials недоступны.
 
 ## Notifications
 
@@ -222,6 +241,7 @@ Channels/categories:
 - Metadata-only cloud push boundary обязательна.
 - Notification click открывает правильный route после session/local-lock handling.
 - Если app locked, route intent сохраняется и resume-ится после unlock.
+- Notification actions не должны раскрывать текст сообщения до local unlock.
 
 ## Accessibility
 
@@ -231,6 +251,15 @@ Channels/categories:
 - High contrast и text scaling support.
 - Reduce motion уважается globally.
 - Нельзя передавать status только через color.
+- `Ctrl+F`, `Esc`, `F5`, `F6`/`Shift+F6` и scoped create/search accelerators должны работать там, где пользователь Windows ожидает keyboard-first UX.
+- Narrator smoke pass обязателен для login, chat list, conversation, composer, calls и settings.
+
+## DPI, resize и multi-monitor
+
+- Layout обязан работать при 100%, 125%, 150% и 200% scaling.
+- Window placement restore не должен открывать окно за пределами видимой work area.
+- Compact/normal/wide transitions не должны терять draft text, selected chat или call controls.
+- Snap Layouts не должны приводить к overlap composer/timeline/header.
 
 ## Localization
 

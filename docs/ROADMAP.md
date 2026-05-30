@@ -12,6 +12,7 @@ Exit criteria:
 - Product spec существует.
 - Architecture, API, security, UX, data/sync, QA и roadmap docs существуют.
 - ADR фиксирует C# primary stack, C/C++ native islands и Qt decision.
+- Windows-native spec фиксирует Windows 11 primary tier и Windows 10 22H2 compatibility tier.
 
 ## Phase 1 - Solution skeleton
 
@@ -24,11 +25,13 @@ Deliverables:
 - Core/infrastructure/messenger/calls test projects.
 - DI и logging bootstrap.
 - App shell с placeholder top-level routes.
+- Windows platform adapters skeleton: activation, windowing, notifications, protected secrets, file interaction и accessibility diagnostics.
 - CI build/test workflow.
 
 Exit criteria:
 
 - restore/build/test проходят локально и в CI.
+- single-instance launch и basic AppWindow shell проходят manual smoke.
 - в repo нет secrets.
 
 ## Phase 2 - Auth и protected session
@@ -144,6 +147,7 @@ Deliverables:
 - MSIX packaging/signing;
 - update policy;
 - diagnostics/feedback;
+- Windows-native QA: DPI, multi-monitor, High Contrast, Narrator, notification activation, taskbar badge;
 - performance profile;
 - security review;
 - full QA matrix.
@@ -153,4 +157,3 @@ Exit criteria:
 - release package installs/upgrades on Windows 10/11.
 - QA evidence complete.
 - нет critical security/privacy gaps.
-

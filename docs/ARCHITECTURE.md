@@ -26,6 +26,20 @@ Native island boundary
   WebRTC/media, libsignal/crypto bindings, hot paths, Windows interop
 ```
 
+## Windows platform layer
+
+Все OS-specific возможности живут за adapters в `APSApp.Client.Infrastructure` или `APSApp.Windows`, а product/domain policy остается в domain modules.
+
+| Adapter | Ответственность |
+|---|---|
+| `IAppActivationRouter` | Launch, protocol, notification, file и future share activation после auth/local-lock gate |
+| `IWindowingService` | Main window, optional secondary windows, placement restore, DPI, title bar и AppWindow interop |
+| `INotificationService` | Local app notifications, activation args, unread badge и future WNS boundary |
+| `IProtectedSecretStore` | Credential Locker/DPAPI-backed tokens, refresh secrets, device material |
+| `IFileInteractionService` | File picker, save picker, drag/drop, clipboard paste и safe temp files |
+| `IAccessibilityDiagnostics` | High Contrast, text scaling, reduce motion и UI automation smoke hooks |
+| `IPackagingInfoProvider` | MSIX identity, version, channel и update/install diagnostics |
+
 ## Ownership модулей
 
 | Модуль | Ответственность |
@@ -63,6 +77,29 @@ Desktop navigation не копирует phone nav graph. Используетс
 
 Route state должен быть явным и сериализуемым только там, где это безопасно. Sensitive media requests, decrypted payloads и keys нельзя класть в navigation state.
 
+## App lifecycle и activation
+
+WinUI/Windows App SDK apps по умолчанию могут запускать несколько instances, но APSApp должен быть single-instance приложением:
+
+- второй запуск активирует уже запущенный main instance;
+- activation payload проходит через `IAppActivationRouter`;
+- route intent не выполняется до session restore и local lock validation;
+- notification action для call/message не может раскрыть content до unlock;
+- file/protocol/share activation, когда появятся, используют тот же gate.
+
+`APSApp.Windows` отвечает за ранний `AppInstance` decision, а domain modules получают только sanitized route intents.
+
+## Windowing model
+
+- Main window содержит Chats, Calls и Settings.
+- Active call может получить secondary window после P1 decision, если это улучшает UX.
+- Media viewer secondary window - P2.
+- `AppWindow` используется для title bar, icon, min size, placement и future presenter states.
+- Placement restore проверяет, что bounds остаются внутри видимой work area.
+- Multi-monitor и per-monitor DPI не должны менять domain state или ломать timeline virtualization.
+
+Windows 11 получает Mica/Mica Alt и richer title bar там, где это уместно. Windows 10 получает Acrylic/solid fallback без product behavior divergence.
+
 ## Network layer
 
 Network layer использует named typed clients:
@@ -83,6 +120,19 @@ Network layer использует named typed clients:
 - Encrypted SQLite или encrypted payload columns: chat history, outbox, media descriptors, sync state.
 - Plain app settings: non-sensitive UI preferences.
 - App-private cache: media thumbnails, decrypted temp playback files и upload payloads.
+
+## Windows shell integration
+
+Shell integrations являются optional adapters, а не core domain:
+
+- taskbar unread badge - P0;
+- local app notifications - P0;
+- notification actions - P1 после packaged app QA;
+- Jump List - P1/P2;
+- tray icon - только после ADR, если нужен background presence;
+- file associations/share target - P2 после hardened activation router.
+
+Ни одна shell integration не может передавать plaintext message content в cloud/push payload или обходить local lock.
 
 ## E2EE / crypto boundary
 

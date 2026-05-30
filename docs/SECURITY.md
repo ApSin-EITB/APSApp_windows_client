@@ -37,6 +37,16 @@
 - Logs должны redact-ить `Authorization`, cookies, refresh tokens, one-time auth codes и 2FA backup codes.
 - Logout удаляет tokens, active WebSocket credentials и push registration state.
 
+## Windows protected storage
+
+Реализация должна иметь narrow abstraction `IProtectedSecretStore`:
+
+- Credential Locker подходит для небольших credentials/secrets, когда это соответствует API ограничениям.
+- DPAPI current-user scope подходит для local master key и small secret blobs.
+- Большие encrypted payloads не хранить в Credential Locker; хранить в encrypted DB/cache, ключ защищать DPAPI/Credential Locker.
+- Storage backend должен иметь fake implementation для unit tests и real implementation для packaged/unpackaged Windows QA.
+- Миграции не должны логировать plaintext secret values.
+
 ## Device identity
 
 Desktop-клиент имеет стабильный per-install device identifier для backend-контрактов, где Android использует registration/device IDs.
@@ -47,6 +57,16 @@ Desktop-клиент имеет стабильный per-install device identifi
 - Не показывать raw device ID в обычном UI.
 - Rotate только через явный account/device reset flow.
 - Смена device ID влияет на key backup и считается security-sensitive.
+
+## Windows Hello и local lock
+
+Windows Hello можно использовать как local unlock helper:
+
+- он подтверждает локального Windows user gesture для разблокировки app/session;
+- он не заменяет backend authentication, TOTP, refresh token validation или device key enrollment;
+- fallback PIN/password внутри APSApp должен быть доступен, если Windows Hello unavailable/disabled;
+- после logout Windows Hello enrollment/permission для APSApp local lock очищается или становится недействительным;
+- sensitive actions могут требовать forced local re-authentication, если это нужно для key release или privacy.
 
 ## Direct 1x1 E2EE
 
@@ -128,6 +148,21 @@ Privacy boundary:
 - Client может показать plaintext только после local fetch и local decrypt, и только если user privacy settings разрешают previews.
 - Lock-screen previews уважают настройку "hide message content".
 
+Windows-specific rules:
+
+- App notification activation всегда проходит через session/local-lock gate.
+- Taskbar badge содержит только count/status, не message content.
+- WNS или другой cloud push, если появится, получает только metadata-only wake/sync data.
+- Notification action `reply` нельзя включать до проверки, что typed reply не утекает через logs/push payloads и не обходить local lock policy.
+
+## Clipboard, screenshots и screen capture
+
+- Clipboard copy message/text/file actions являются user-initiated.
+- Secrets, TOTP backup codes и device keys нельзя auto-copy.
+- Clipboard clearing policy должна быть owner-approved, потому что aggressive clear может ломать пользовательские workflows.
+- Screenshot/privacy mode на Windows считается best-effort до отдельного доказанного implementation path.
+- Нельзя обещать полную Android `FLAG_SECURE` parity без Windows-specific QA evidence.
+
 ## TLS и network security
 
 - System trust TLS validation обязательна.
@@ -172,4 +207,3 @@ Feedback reports не должны включать:
 - Direct E2EE interoperability с Android подтверждена.
 - Backup restore не импортирует fake `Attachment` placeholders или unresolved local transport rows.
 - Native modules имеют unit tests и memory-safety review до release.
-

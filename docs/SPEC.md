@@ -36,7 +36,19 @@
 - Settings: account, profile, appearance, security/privacy, notifications, network/data, active session, about и feedback.
 - Local encrypted persistence, cache limits и restart/resume behavior.
 - Russian и English UI.
-- Windows 10 22H2 и Windows 11 support на x64.
+- Windows 11 current supported releases как primary x64 target и Windows 10 22H2 как compatibility target.
+
+### Windows 10/11 support tiers
+
+Подробная platform-native спецификация живет в [WINDOWS_NATIVE_SPEC.md](WINDOWS_NATIVE_SPEC.md).
+
+| Tier | OS | Scope |
+|---|---|---|
+| Tier A | Windows 11 current supported releases, x64 | Primary beta/release target: полный Windows-native UX, MSIX install/upgrade, notifications, taskbar badge, accessibility, DPI и multi-monitor QA. |
+| Tier B | Windows 10 22H2 x64 | Compatibility target: core auth/messenger/media/calls работают, Windows 11-only visual/system features имеют fallback или `QA PARTIAL`. |
+| Future | Windows 11 ARM64 | P2 после стабилизации x64. |
+
+На дату 2026-05-30 Windows 10 Home/Pro уже вышла из обычного Microsoft support lifecycle 2025-10-14. Поэтому Windows 10 не является равным production baseline: поддерживаем ее осознанно для compatibility/owner QA, но Windows 11 остается основной нативной целью.
 
 ### P1 Scope
 
@@ -70,6 +82,7 @@ Primary:
 
 - Language: C#.
 - UI: WinUI 3 on Windows App SDK.
+- Windows App SDK: только stable channel; Preview/Experimental APIs запрещены без ADR.
 - Runtime: current .NET LTS.
 - Architecture: MVVM + repository + service clients.
 - Packaging: MSIX first; unpackaged dev run разрешен только для local development.
@@ -204,12 +217,14 @@ extern "C" __declspec(dllexport) int ApsNativeVersion() noexcept
 
 - App стартует в splash/bootstrap state и восстанавливает prior authenticated session, когда это возможно.
 - Authenticated shell показывает top-level navigation для Chats, Calls и Settings.
+- App является single-instance: повторный launch, notification/protocol/file activation маршрутизируются в существующий process через Windows activation router.
 - Desktop layout использует responsive master-detail model:
   - compact width: один pane;
 - normal desktop: chat/call list + detail pane;
 - wide desktop: list + conversation + info/details pane where relevant.
 - Shell сохраняет route state across restart when safe.
 - App поддерживает русский и английский, по умолчанию следует Windows theme.
+- Windows 11 использует нативные visual materials where appropriate; Windows 10 получает documented fallback без потери core functionality.
 
 ### Auth
 
@@ -307,6 +322,7 @@ extern "C" __declspec(dllexport) int ApsNativeVersion() noexcept
 - UI automation для core routes и resize/adaptive layout.
 - Native tests для C/C++ modules.
 - Manual QA matrix покрывает fresh install, upgrade, restart, reconnect, cache loss, dark/light, RU/EN, Windows 10/11.
+- Windows-native QA отдельно покрывает Windows 11 Tier A и Windows 10 22H2 Tier B, включая notifications, taskbar badge, DPI, High Contrast, Narrator, keyboard-only, Snap Layouts и multi-monitor.
 - Security QA проверяет notification privacy и отсутствие bearer tokens in URL.
 
 ## Boundaries
@@ -341,6 +357,7 @@ Never:
 
 - Repository имеет source-of-truth specs и ADRs.
 - First code skeleton можно создать без повторного решения stack, module boundaries, security model или QA gates.
+- Windows 10/11 support tiers зафиксированы, а Windows-native behavior вынесен в отдельную спецификацию.
 - У каждой P0 feature есть owner doc section и test strategy.
 - Каждый upstream contract имеет named source document.
 - Qt/C++ рассмотрены явно, а не оставлены будущей ambiguity.

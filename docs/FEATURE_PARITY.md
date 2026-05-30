@@ -27,9 +27,13 @@
 | PIN unlock | P0 |
 | Biometric unlock | P1: Windows Hello |
 | Notification permission | Windows-specific: Windows notification availability/settings |
+| Notification badges | Windows-specific/P0: taskbar unread badge, no content |
 | Battery/autostart guidance | Windows-specific/P1 только если нужна реальная Windows background setting |
 | FCM runtime/token sync | Windows-specific: без FCM; WNS или reconnect/sync, metadata-only |
 | OTA worker | Out для Windows; заменяется MSIX/update channel |
+| Android Activity lifecycle | Windows-specific: single-instance AppActivationRouter |
+| Android window/screen sizes | Windows-specific: AppWindow, Snap Layouts, per-monitor DPI, multi-monitor |
+| Material phone surfaces | Windows-specific: WinUI NavigationView, CommandBar, Flyout/MenuFlyout, Mica/Acrylic fallback |
 
 ## 2. Auth и onboarding
 
@@ -191,3 +195,5 @@ Windows может улучшать layout и desktop ergonomics, но не до
 - group/channel ACL behavior;
 - no-raw-technical-id display policy;
 - QA evidence discipline.
+
+Windows 11 является primary native target. Windows 10 22H2 является compatibility target: core functionality сохраняется, но Windows 11-only visual/system behavior получает fallback или явный `QA PARTIAL`.
