@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "APSApp.Windows (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "APSApp.Windows (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

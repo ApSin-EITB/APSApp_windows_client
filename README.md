@@ -2,7 +2,7 @@
 
 Нативный Windows-клиент для APSApp / «Личка».
 
-Статус: репозиторий в режиме `spec-first`, создан 2026-05-30. Сейчас это источник истины для будущего Windows-клиента: здесь лежат продуктовые, архитектурные, security, API, UX, data/sync, QA и roadmap-спецификации.
+Статус: репозиторий перешел из `spec-first` в ранний `runtime preview`: здесь лежат source-of-truth спецификации и первый WinUI 3 каркас приложения с фэйк-данными, без подключения к backend/server.
 
 ## Канон
 
@@ -30,15 +30,38 @@
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Milestones от spec-only до beta |
 | [docs/decisions](docs/decisions) | ADR |
 
-## Будущие команды
+## Локальный preview
 
-Команды становятся обязательными после появления первого solution skeleton.
+Текущий каркас показывает дизайн-систему из `docs/DESIGN_SYSTEM.md`: APS rail, список чатов, область диалога, context pane, звонки и настройки. Данные захардкожены в XAML/code-behind, сетевых клиентов и подключений к серверу нет.
+
+Команды:
+
+```powershell
+# Если SDK установлен через dotnet-install в user profile
+$env:PATH = "$env:USERPROFILE\.dotnet;$env:PATH"
+
+dotnet restore .\APSApp.Windows.sln
+dotnet build .\APSApp.Windows.sln -c Debug -p:Platform=x64
+dotnet run --project .\src\APSApp.Windows\APSApp.Windows.csproj -c Debug
+```
+
+Если нужно запустить уже собранный x64 preview без `dotnet run`:
+
+```powershell
+.\src\APSApp.Windows\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\APSApp.Windows.exe
+```
+
+Сейчас project настроен как unpackaged self-contained WinUI preview (`WindowsPackageType=None`), чтобы приложение запускалось без включения Windows Developer Mode. MSIX/package identity остаются release-направлением в спецификациях.
+
+## Команды
+
+Команды для текущего solution skeleton:
 
 ```powershell
 # Restore/build/test managed code
 dotnet restore .\APSApp.Windows.sln
-dotnet build .\APSApp.Windows.sln -c Debug
-dotnet test .\APSApp.Windows.sln -c Debug
+dotnet build .\APSApp.Windows.sln -c Debug -p:Platform=x64
+# тестовых проектов пока нет
 dotnet format .\APSApp.Windows.sln --verify-no-changes
 
 # Native island, когда появится

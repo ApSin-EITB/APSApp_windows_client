@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="APSApp_Windows.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:APSApp_Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{StaticResource ApsAppBackdropBrush}"
+    mc:Ignorable="d">
+
+    <Grid Padding="12" Background="{StaticResource ApsAppBackdropBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="72" />
+            <ColumnDefinition Width="360" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="326" />
+        </Grid.ColumnDefinitions>
+
+        <Border
+            Grid.Column="0"
+            Margin="0,0,12,0"
+            Padding="8"
+            Background="{StaticResource ApsGlassDarkBrush}"
+            BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}"
+            BorderThickness="1"
+            CornerRadius="22">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel HorizontalAlignment="Center" Spacing="10">
+                    <Border
+                        Width="44"
+                        Height="44"
+                        Background="{StaticResource ApsOutgoingBubbleBrush}"
+                        CornerRadius="14">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="17"
+                            FontWeight="SemiBold"
+                            Foreground="{StaticResource ApsOutgoingTextBrush}"
+                            Text="APS" />
+                    </Border>
+                    <Border
+                        Width="32"
+                        Height="4"
+                        Background="{StaticResource ApsBrandPrimaryBrush}"
+                        CornerRadius="2" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <Button
+                        AutomationProperties.Name="Чаты"
+                        Click="ShowChats_Click"
+                        Style="{StaticResource RailButtonStyle}"
+                        ToolTipService.ToolTip="Чаты">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8BD;" />
+                    </Button>
+                    <Button
+                        AutomationProperties.Name="Звонки"
+                        Click="ShowCalls_Click"
+                        Style="{StaticResource RailButtonStyle}"
+                        ToolTipService.ToolTip="Звонки">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE717;" />
+                    </Button>
+                    <Button
+                        AutomationProperties.Name="Настройки"
+                        Click="ShowSettings_Click"
+                        Style="{StaticResource RailButtonStyle}"
+                        ToolTipService.ToolTip="Настройки">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE713;" />
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" HorizontalAlignment="Center">
+                    <Button
+                        AutomationProperties.Name="Локальная блокировка"
+                        Style="{StaticResource RailButtonStyle}"
+                        ToolTipService.ToolTip="Локальная блокировка">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72E;" />
+                    </Button>
+                    <Border
+                        Width="36"
+                        Height="24"
+                        Margin="0,8,0,0"
+                        Background="#2414B9B9"
+                        BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="11"
+                            FontWeight="SemiBold"
+                            Foreground="{StaticResource ApsBrandSoftBrush}"
+                            Text="12" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid x:Name="ChatsListPane" Grid.Column="1">
+            <Border
+                Padding="14"
+                Background="{StaticResource ApsGlassDarkBrush}"
+                BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}"
+                BorderThickness="1"
+                CornerRadius="22">
+                <Grid RowSpacing="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Height="42"
+                            Padding="14,0"
+                            Background="#45102A2F"
+                            BorderBrush="#1F14B9B9"
+                            BorderThickness="1"
+                            CornerRadius="14">
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="14"
+                                    Foreground="{StaticResource ApsTextMutedBrush}"
+                                    Glyph="&#xE721;" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Foreground="{StaticResource ApsTextMutedBrush}"
+                                    Text="Поиск" />
+                            </Grid>
+                        </Border>
+                        <Button
+                            Grid.Column="1"
+                            AutomationProperties.Name="Создать чат"
+                            Style="{StaticResource ChromeIconButtonStyle}"
+                            ToolTipService.ToolTip="Создать чат">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;" />
+                        </Button>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+                        <Border Padding="12,7" Background="{StaticResource ApsSelectedSurfaceBrush}" BorderBrush="#4614B9B9" BorderThickness="1" CornerRadius="11">
+                            <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource ApsBrandSoftBrush}" Text="Все" />
+                        </Border>
+                        <Border Padding="12,7" Background="#24102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="11">
+                            <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Личные" />
+                        </Border>
+                        <Border Padding="12,7" Background="#24102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="11">
+                            <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Каналы" />
+                        </Border>
+                        <Border Padding="12,7" Background="#24102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="11">
+                            <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="12+" />
+                        </Border>
+                    </StackPanel>
+
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Spacing="8">
+                            <Border Padding="10" Background="#2014B9B9" BorderBrush="#3314B9B9" BorderThickness="1" CornerRadius="12">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="44" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Background="{StaticResource ApsOutgoingBubbleBrush}" CornerRadius="14">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{StaticResource ApsOutgoingTextBrush}" Text="ДХ" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Spacing="3">
+                                        <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Данька Холокост" />
+                                        <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Интересно, а через PRO можно ли переписать..." TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" HorizontalAlignment="Right" Spacing="5">
+                                        <TextBlock FontSize="12" Foreground="{StaticResource ApsBrandSoftBrush}" Text="14:52" />
+                                        <Border MinWidth="22" Height="22" Background="{StaticResource ApsBrandPrimaryBrush}" CornerRadius="8">
+                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource ApsOutgoingTextBrush}" Text="3" />
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <Border Padding="10" Background="#52102A2F" BorderBrush="#2B14B9B9" BorderThickness="1" CornerRadius="12">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="44" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Background="#FF0B1E22" BorderBrush="{StaticResource ApsBrandDeepBrush}" BorderThickness="1" CornerRadius="14">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{StaticResource ApsBrandSoftBrush}" Text="КБ" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Spacing="3">
+                                        <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="КБ плюс" />
+                                        <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Когда раздавали магний, он взял два..." TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="14:40" />
+                                </Grid>
+                            </Border>
+
+                            <Border Padding="10" Background="#36102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="12">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="44" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Background="#FFEAF4F3" CornerRadius="14">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{StaticResource ApsBrandDeepBrush}" Text="СС" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Spacing="3">
+                                        <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Сам себе сам" />
+                                        <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Фотография" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="14:26" />
+                                </Grid>
+                            </Border>
+
+                            <Border Padding="10" Background="#36102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="12">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="44" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Background="#FF102A2F" BorderBrush="#2EA8D2D0" BorderThickness="1" CornerRadius="14">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{StaticResource ApsBrandMutedBrush}" Text="ОZ" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Spacing="3">
+                                        <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Операция Z: Военкоры..." />
+                                        <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="В Днепропетровске закры..." TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="14:38" />
+                                </Grid>
+                            </Border>
+
+                            <Border Padding="10" Background="#36102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="12">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="44" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Background="#FF075E66" CornerRadius="14">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#FFFFFFFF" Text="AI" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Spacing="3">
+                                        <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Вайб-кодинг" />
+                                        <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Каркас Windows-клиента готовится..." TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="14:10" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="CallsListPane" Grid.Column="1" Visibility="Collapsed">
+            <Border Padding="16" Background="{StaticResource ApsGlassDarkBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="22">
+                <StackPanel Spacing="14">
+                    <TextBlock FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Звонки" />
+                    <Border Padding="12" Background="{StaticResource ApsSelectedSurfaceBrush}" BorderBrush="#3314B9B9" BorderThickness="1" CornerRadius="14">
+                        <StackPanel>
+                            <TextBlock FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Данька Холокост" />
+                            <TextBlock FontSize="12" Foreground="{StaticResource ApsBrandSoftBrush}" Text="Входящий видеозвонок • сейчас" />
+                        </StackPanel>
+                    </Border>
+                    <Border Padding="12" Background="#36102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="14">
+                        <StackPanel>
+                            <TextBlock FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="КБ плюс" />
+                            <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Пропущенный • 12:44" />
+                        </StackPanel>
+                    </Border>
+                    <Border Padding="12" Background="#36102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="14">
+                        <StackPanel>
+                            <TextBlock FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Сам себе сам" />
+                            <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Исходящий аудио • вчера" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="SettingsListPane" Grid.Column="1" Visibility="Collapsed">
+            <Border Padding="16" Background="{StaticResource ApsGlassDarkBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="22">
+                <StackPanel Spacing="10">
+                    <TextBlock FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Настройки" />
+                    <TextBlock Margin="0,0,0,6" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Фэйк-профиль для дизайн-превью" />
+                    <Border Padding="12" Background="{StaticResource ApsSelectedSurfaceBrush}" BorderBrush="#3314B9B9" BorderThickness="1" CornerRadius="14">
+                        <TextBlock Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Аккаунт и профиль" />
+                    </Border>
+                    <Border Padding="12" Background="#36102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="14">
+                        <TextBlock Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Внешний вид" />
+                    </Border>
+                    <Border Padding="12" Background="#36102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="14">
+                        <TextBlock Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Безопасность и приватность" />
+                    </Border>
+                    <Border Padding="12" Background="#36102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="14">
+                        <TextBlock Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Уведомления" />
+                    </Border>
+                    <Border Padding="12" Background="#36102A2F" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="14">
+                        <TextBlock Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Сеть и данные" />
+                    </Border>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="ConversationStage" Grid.Column="2" Margin="12,0">
+            <Border Background="#52061315" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="22">
+                <Grid RowSpacing="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="72" />
+                        <RowDefinition Height="48" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="86" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Padding="18,10" ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="48" Height="48" Background="{StaticResource ApsOutgoingBubbleBrush}" CornerRadius="15">
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource ApsOutgoingTextBrush}" Text="ДХ" />
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                            <TextBlock FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Данька Холокост" />
+                            <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="был(а) недавно • E2EE preview" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+                            <Button AutomationProperties.Name="Поиск в диалоге" Style="{StaticResource ChromeIconButtonStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE721;" />
+                            </Button>
+                            <Button AutomationProperties.Name="Аудиозвонок" Style="{StaticResource ChromeIconButtonStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE717;" />
+                            </Button>
+                            <Button AutomationProperties.Name="Информация о диалоге" Style="{StaticResource ChromeIconButtonStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Grid.Row="1" Margin="18,0" Padding="12,8" Background="#55102A2F" BorderBrush="#2424565A" BorderThickness="1" CornerRadius="12">
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border Width="28" Height="28" Background="#2414B9B9" CornerRadius="8">
+                                <FontIcon HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{StaticResource ApsBrandSoftBrush}" Glyph="&#xE77F;" />
+                            </Border>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource ApsBrandSoftBrush}" Text="Закрепленное сообщение" />
+                                <TextBlock FontSize="12" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Локальный preview-макет, сервер не подключен" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="pin" />
+                        </Grid>
+                    </Border>
+
+                    <ScrollViewer Grid.Row="2" Padding="18,16" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Spacing="12">
+                            <Border HorizontalAlignment="Right" MaxWidth="520" Padding="14,10" Background="{StaticResource ApsOutgoingBubbleBrush}" CornerRadius="18">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Foreground="{StaticResource ApsOutgoingTextBrush}" Text="У меня кстати опять какого-то худа до 117 хешрейта упал" TextWrapping="Wrap" />
+                                    <TextBlock HorizontalAlignment="Right" FontSize="11" Foreground="#CC073236" Text="14:29  ✓✓" />
+                                </StackPanel>
+                            </Border>
+                            <Border HorizontalAlignment="Right" MaxWidth="390" Padding="14,10" Background="{StaticResource ApsOutgoingBubbleBrush}" CornerRadius="18">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Foreground="{StaticResource ApsOutgoingTextBrush}" Text="как это работает сука" TextWrapping="Wrap" />
+                                    <TextBlock HorizontalAlignment="Right" FontSize="11" Foreground="#CC073236" Text="14:29  ✓✓" />
+                                </StackPanel>
+                            </Border>
+                            <Border HorizontalAlignment="Left" MaxWidth="410" Padding="14,10" Background="{StaticResource ApsIncomingBubbleBrush}" BorderBrush="{StaticResource ApsIncomingBubbleStrokeBrush}" BorderThickness="1" CornerRadius="18">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Мб от нагрузки на проц" TextWrapping="Wrap" />
+                                    <TextBlock HorizontalAlignment="Right" FontSize="11" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="14:31" />
+                                </StackPanel>
+                            </Border>
+                            <Border HorizontalAlignment="Right" MaxWidth="520" Padding="12" Background="{StaticResource ApsOutgoingBubbleBrush}" CornerRadius="18">
+                                <StackPanel Spacing="8">
+                                    <Border Height="188" Background="#F6FCFB" CornerRadius="12">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="48" />
+                                            </Grid.RowDefinitions>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Border Margin="8" Background="#FFE3F3F1" CornerRadius="8">
+                                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="34" Text="🇬🇧" />
+                                                </Border>
+                                                <Border Grid.Column="1" Margin="8" Background="#FFD9EEF0" CornerRadius="8">
+                                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Text="AI" Foreground="{StaticResource ApsBrandDeepBrush}" />
+                                                </Border>
+                                            </Grid>
+                                            <TextBlock Grid.Row="1" Margin="12,4" Foreground="#FF10282B" Text="Великобритания рассматривает возможность разрешить оружию под управлением ИИ наносить автономные удары..." TextWrapping="Wrap" />
+                                        </Grid>
+                                    </Border>
+                                    <TextBlock Foreground="{StaticResource ApsOutgoingTextBrush}" Text="Переслано из КБ • BRICS News" />
+                                    <TextBlock HorizontalAlignment="Right" FontSize="11" Foreground="#CC073236" Text="19.1K  14:36  ✓✓" />
+                                </StackPanel>
+                            </Border>
+                            <Border HorizontalAlignment="Left" MaxWidth="560" Padding="14,10" Background="{StaticResource ApsIncomingBubbleBrush}" BorderBrush="{StaticResource ApsIncomingBubbleStrokeBrush}" BorderThickness="1" CornerRadius="18">
+                                <TextBlock Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Интересно а через pro можно ли переписать пайплайн формирования блока, а то тоже пиздец дорогая хуйня" TextWrapping="Wrap" />
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <Border Grid.Row="3" Margin="18,0,18,18" Padding="12" Background="{StaticResource ApsInputDockBrush}" BorderBrush="#3314B9B9" BorderThickness="1" CornerRadius="20">
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button AutomationProperties.Name="Прикрепить файл" Style="{StaticResource ChromeIconButtonStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE723;" />
+                            </Button>
+                            <TextBox Grid.Column="1" Height="42" PlaceholderText="Сообщение..." Background="#400B1E22" BorderBrush="#1F14B9B9" Foreground="{StaticResource ApsTextPrimaryBrush}" />
+                            <Button Grid.Column="2" AutomationProperties.Name="Голосовое сообщение" Style="{StaticResource ChromeIconButtonStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE720;" />
+                            </Button>
+                            <Button Grid.Column="3" AutomationProperties.Name="Отправить" Style="{StaticResource ChromeIconButtonStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE724;" />
+                            </Button>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="CallsStage" Grid.Column="2" Margin="12,0" Visibility="Collapsed">
+            <Border Padding="22" Background="#52061315" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="22">
+                <Grid RowSpacing="18">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <TextBlock FontSize="24" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Входящий видеозвонок" />
+                        <TextBlock Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Фэйк-состояние для проверки Windows-native call surface" />
+                    </StackPanel>
+                    <Grid Grid.Row="1" ColumnSpacing="14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="220" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{StaticResource ApsSelectedSurfaceBrush}" BorderBrush="#3314B9B9" BorderThickness="1" CornerRadius="22">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
+                                <Border Width="112" Height="112" Background="{StaticResource ApsOutgoingBubbleBrush}" CornerRadius="34">
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="34" FontWeight="SemiBold" Foreground="{StaticResource ApsOutgoingTextBrush}" Text="ДХ" />
+                                </Border>
+                                <TextBlock HorizontalAlignment="Center" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Данька Холокост" />
+                                <TextBlock HorizontalAlignment="Center" Foreground="{StaticResource ApsBrandSoftBrush}" Text="ringing • камера запрошена" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Padding="12" Background="{StaticResource ApsGlassElevatedBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="18">
+                            <StackPanel Spacing="10">
+                                <TextBlock FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Local preview" />
+                                <Border Height="150" Background="#FF102A2F" CornerRadius="14">
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="camera off" />
+                                </Border>
+                                <TextBlock FontSize="12" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Микрофон: Realtek • Камера: off" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="12">
+                        <Button Content="Отклонить" CornerRadius="12" Background="#335C1F2B" Foreground="#FFFFD9DF" />
+                        <Button Content="Принять" CornerRadius="12" Background="{StaticResource ApsBrandPrimaryBrush}" Foreground="{StaticResource ApsOutgoingTextBrush}" />
+                        <Button Content="Микрофон" CornerRadius="12" Background="#24102A2F" Foreground="{StaticResource ApsTextPrimaryBrush}" />
+                        <Button Content="Камера" CornerRadius="12" Background="#24102A2F" Foreground="{StaticResource ApsTextPrimaryBrush}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="SettingsStage" Grid.Column="2" Grid.ColumnSpan="2" Margin="12,0,0,0" Visibility="Collapsed">
+            <Border Padding="22" Background="#52061315" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="22">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="16">
+                        <StackPanel>
+                            <TextBlock FontSize="24" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Аккаунт и профиль" />
+                            <TextBlock Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Каркас настроек показывает Android glass language в desktop density" />
+                        </StackPanel>
+                        <Border Padding="18" Background="{StaticResource ApsGlassElevatedBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="22">
+                            <Grid ColumnSpacing="16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="72" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Border Background="{StaticResource ApsOutgoingBubbleBrush}" CornerRadius="22">
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource ApsOutgoingTextBrush}" Text="APS" />
+                                </Border>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="QA Preview User" />
+                                    <TextBlock Foreground="{StaticResource ApsTextSecondaryBrush}" Text="@aps_preview • локальный каркас без сервера" />
+                                </StackPanel>
+                                <Button Grid.Column="2" Content="Изменить" CornerRadius="12" Background="#2414B9B9" Foreground="{StaticResource ApsBrandSoftBrush}" />
+                            </Grid>
+                        </Border>
+                        <Grid ColumnSpacing="14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Border Padding="16" Background="{StaticResource ApsGlassElevatedBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="18">
+                                <StackPanel Spacing="8">
+                                    <TextBlock FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Внешний вид" />
+                                    <TextBlock Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Система • темная • glass включен" />
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Border Padding="12,8" Background="{StaticResource ApsSelectedSurfaceBrush}" CornerRadius="10">
+                                            <TextBlock Foreground="{StaticResource ApsBrandSoftBrush}" Text="Dark" />
+                                        </Border>
+                                        <Border Padding="12,8" Background="#24102A2F" CornerRadius="10">
+                                            <TextBlock Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Light" />
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="1" Padding="16" Background="{StaticResource ApsGlassElevatedBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="18">
+                                <StackPanel Spacing="8">
+                                    <TextBlock FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Приватность" />
+                                    <TextBlock Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Preview в уведомлениях скрыт • локальная блокировка 5 мин" TextWrapping="Wrap" />
+                                    <Border Padding="12,8" Background="#2414B9B9" CornerRadius="10">
+                                        <TextBlock Foreground="{StaticResource ApsBrandSoftBrush}" Text="Windows Hello позже" />
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        <Border Padding="16" Background="{StaticResource ApsGlassElevatedBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="18">
+                            <StackPanel Spacing="10">
+                                <TextBlock FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Сеть и данные" />
+                                <TextBlock Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Сервер отключен: все строки, сообщения, звонки и настройки сейчас фэйковые." />
+                                <ProgressBar Value="38" Maximum="100" Foreground="{StaticResource ApsBrandPrimaryBrush}" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="ContextPane" Grid.Column="3">
+            <Border Padding="16" Background="{StaticResource ApsGlassDarkBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="22">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="14">
+                        <StackPanel Spacing="2">
+                            <TextBlock x:Name="ContextTitle" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Контекст диалога" />
+                            <TextBlock x:Name="ContextSubtitle" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Профиль, медиа, участники и безопасность" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <Border Padding="14" Background="{StaticResource ApsGlassElevatedBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="18">
+                            <StackPanel Spacing="10">
+                                <Border Width="74" Height="74" HorizontalAlignment="Center" Background="{StaticResource ApsOutgoingBubbleBrush}" CornerRadius="24">
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="SemiBold" Foreground="{StaticResource ApsOutgoingTextBrush}" Text="ДХ" />
+                                </Border>
+                                <TextBlock HorizontalAlignment="Center" FontSize="17" FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Данька Холокост" />
+                                <TextBlock HorizontalAlignment="Center" Foreground="{StaticResource ApsTextSecondaryBrush}" Text="contact • recently online" />
+                            </StackPanel>
+                        </Border>
+                        <Border Padding="14" Background="{StaticResource ApsGlassElevatedBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="18">
+                            <StackPanel Spacing="8">
+                                <TextBlock FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Статусы" />
+                                <TextBlock Foreground="{StaticResource ApsBrandSoftBrush}" Text="E2EE direct chat" />
+                                <TextBlock Foreground="{StaticResource ApsTextSecondaryBrush}" Text="Фэйк-данные • транспорт не подключен • уведомления metadata-only" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Border Height="82" Background="#FFEAF4F3" CornerRadius="14">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource ApsBrandDeepBrush}" Text="IMG" />
+                            </Border>
+                            <Border Grid.Column="1" Height="82" Background="#FFD9EEF0" CornerRadius="14">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource ApsBrandDeepBrush}" Text="PDF" />
+                            </Border>
+                            <Border Grid.Column="2" Height="82" Background="#FF102A2F" BorderBrush="#2EA8D2D0" BorderThickness="1" CornerRadius="14">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource ApsBrandSoftBrush}" Text="GIF" />
+                            </Border>
+                        </Grid>
+                        <Border Padding="14" Background="{StaticResource ApsGlassElevatedBrush}" BorderBrush="{StaticResource ApsGlassDarkStrokeBrush}" BorderThickness="1" CornerRadius="18">
+                            <StackPanel Spacing="8">
+                                <TextBlock FontWeight="SemiBold" Foreground="{StaticResource ApsTextPrimaryBrush}" Text="Desktop QA targets" />
+                                <TextBlock Foreground="{StaticResource ApsTextSecondaryBrush}" Text="1366 wide • Snap left/right • transparency off • High Contrast • DPI 125/150/200" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>
