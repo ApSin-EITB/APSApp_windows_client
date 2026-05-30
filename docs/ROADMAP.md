@@ -1,44 +1,44 @@
 # Roadmap
 
-Updated: 2026-05-30
+Обновлено: 2026-05-30
 
-## Phase 0 - Spec and Repository Bootstrap
+## Phase 0 - Spec и repository bootstrap
 
-Goal: create the Windows client repository and source-of-truth specifications.
+Цель: создать репозиторий Windows-клиента и source-of-truth specifications.
 
 Exit criteria:
 
-- README and AGENTS exist.
-- Product spec exists.
-- Architecture, API, security, UX, data/sync, QA and roadmap docs exist.
-- ADR captures C# primary stack, C/C++ native islands and Qt decision.
+- README и AGENTS существуют.
+- Product spec существует.
+- Architecture, API, security, UX, data/sync, QA и roadmap docs существуют.
+- ADR фиксирует C# primary stack, C/C++ native islands и Qt decision.
 
-## Phase 1 - Solution Skeleton
+## Phase 1 - Solution skeleton
 
-Goal: compile an empty but structured WinUI app.
+Цель: пустое, но структурированное WinUI-приложение компилируется.
 
 Deliverables:
 
 - `APSApp.Windows.sln`.
 - WinUI app project.
 - Core/infrastructure/messenger/calls test projects.
-- DI and logging bootstrap.
-- App shell with placeholder top-level routes.
+- DI и logging bootstrap.
+- App shell с placeholder top-level routes.
 - CI build/test workflow.
 
 Exit criteria:
 
-- restore/build/test pass locally and in CI.
-- no secrets in repo.
+- restore/build/test проходят локально и в CI.
+- в repo нет secrets.
 
-## Phase 2 - Auth and Protected Session
+## Phase 2 - Auth и protected session
 
-Goal: login and restore secure session.
+Цель: login и restore secure session.
 
 Deliverables:
 
 - typed core auth client;
-- token storage via Credential Locker/DPAPI;
+- token storage через Credential Locker/DPAPI;
 - refresh handling;
 - login/logout UI;
 - 2FA challenge UI;
@@ -46,13 +46,13 @@ Deliverables:
 
 Exit criteria:
 
-- dev contour login/refresh/me works.
-- tokens absent from logs and URLs.
-- restart restore works.
+- dev contour login/refresh/me работает.
+- tokens отсутствуют в logs и URLs.
+- restart restore работает.
 
-## Phase 3 - Messenger Bootstrap
+## Phase 3 - Messenger bootstrap
 
-Goal: connect to chat runtime and load chat list.
+Цель: подключиться к chat runtime и загрузить chat list.
 
 Deliverables:
 
@@ -61,21 +61,21 @@ Deliverables:
 - local DB schema;
 - chat list UI;
 - contact dirty-signal handling;
-- route state and reconnect policy.
+- route state и reconnect policy.
 
 Exit criteria:
 
-- chat list loads from dev contour.
-- reconnect does not duplicate rows.
-- no previous-route flash in UI automation.
+- chat list грузится из dev contour.
+- reconnect не duplicate-ит rows.
+- no previous-route flash в UI automation.
 
-## Phase 4 - Direct E2EE Text Parity
+## Phase 4 - Direct E2EE text parity
 
-Goal: Android-compatible direct encrypted text messaging.
+Цель: Android-compatible direct encrypted text messaging.
 
 Deliverables:
 
-- direct crypto engine decision and implementation;
+- direct crypto engine decision и implementation;
 - key publish/fetch/backup basics;
 - direct send/receive/decrypt;
 - outbox replay;
@@ -84,12 +84,12 @@ Deliverables:
 
 Exit criteria:
 
-- Windows <-> Android direct text passes on dev contour.
-- plaintext absent from server/push/logs.
+- Windows <-> Android direct text проходит на dev contour.
+- plaintext отсутствует на server/push/logs.
 
-## Phase 5 - Media and Storage v1
+## Phase 5 - Media и Storage v1
 
-Goal: attachment parity for beta media kinds.
+Цель: attachment parity для beta media kinds.
 
 Deliverables:
 
@@ -102,11 +102,11 @@ Deliverables:
 
 Exit criteria:
 
-- full media matrix passes across Windows and Android for dev contour.
+- full media matrix проходит между Windows и Android на dev contour.
 
-## Phase 6 - Groups, Channels and Comments
+## Phase 6 - Groups, channels и comments
 
-Goal: structured chat parity.
+Цель: structured chat parity.
 
 Deliverables:
 
@@ -118,11 +118,11 @@ Deliverables:
 
 Exit criteria:
 
-- role matrix is covered or explicitly partial with owner-approved scope.
+- role matrix покрыта или явно partial с owner-approved scope.
 
 ## Phase 7 - Calls
 
-Goal: direct audio/video calls.
+Цель: direct audio/video calls.
 
 Deliverables:
 
@@ -133,11 +133,11 @@ Deliverables:
 
 Exit criteria:
 
-- Windows <-> Android audio/video matrix passes.
+- Windows <-> Android audio/video matrix проходит.
 
-## Phase 8 - Release Hardening
+## Phase 8 - Release hardening
 
-Goal: beta-quality Windows release.
+Цель: beta-quality Windows release.
 
 Deliverables:
 
@@ -150,7 +150,7 @@ Deliverables:
 
 Exit criteria:
 
-- release package installed/upgraded on Windows 10/11.
+- release package installs/upgrades on Windows 10/11.
 - QA evidence complete.
-- no critical security/privacy gaps.
+- нет critical security/privacy gaps.
 

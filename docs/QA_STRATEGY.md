@@ -1,18 +1,18 @@
 # QA Strategy
 
-Updated: 2026-05-30
+Обновлено: 2026-05-30
 
-## Principle
+## Принцип
 
-Windows QA follows the APSApp rule: no broad `QA PASS` after one representative happy path. A feature passes only after its matrix is covered or the uncovered areas are explicitly marked `QA PARTIAL`, `QA BLOCKED`, or `QA MANUAL`.
+Windows QA следует общему правилу APSApp: нельзя ставить широкий `QA PASS` после одного representative happy path. Функция считается пройденной только когда покрыта ее matrix или непокрытые области явно отмечены как `QA PARTIAL`, `QA BLOCKED` или `QA MANUAL`.
 
-## Environments
+## Окружения
 
-Minimum beta matrix:
+Минимальная beta matrix:
 
-- Windows 10 22H2 x64, Russian locale.
-- Windows 11 current x64, Russian locale.
-- Windows 11 current x64, English locale.
+- Windows 10 22H2 x64, русская локаль.
+- Windows 11 current x64, русская локаль.
+- Windows 11 current x64, английская локаль.
 - Fresh install.
 - Upgrade install.
 - Light theme.
@@ -21,10 +21,10 @@ Minimum beta matrix:
 
 Future:
 
-- ARM64 after explicit roadmap decision.
-- Microsoft Store packaged install if store channel is chosen.
+- ARM64 после явного roadmap decision.
+- Microsoft Store packaged install, если выбран store channel.
 
-## Automated Gates
+## Automated gates
 
 Managed code:
 
@@ -49,9 +49,9 @@ Packaging:
 msbuild .\APSApp.Windows.sln /m /restore /p:Configuration=Release /p:Platform=x64
 ```
 
-## Unit Test Areas
+## Области unit tests
 
-- Auth state and refresh.
+- Auth state и refresh.
 - 2FA challenge state.
 - Token redaction.
 - DTO mapping.
@@ -59,34 +59,34 @@ msbuild .\APSApp.Windows.sln /m /restore /p:Configuration=Release /p:Platform=x6
 - Outbox dedupe/replay.
 - Delivery/read status monotonicity.
 - Contact dirty-signal handling.
-- Media upload retry and terminal failures.
+- Media upload retry и terminal failures.
 - Descriptor parsing.
 - Local backup import filters.
 - Notification privacy.
 - Settings persistence.
 
-## Integration Test Areas
+## Области integration tests
 
-Against dev contour:
+На dev contour:
 
 - login/refresh/me;
-- 2FA backup-code login path with disposable QA user;
+- 2FA backup-code login path с disposable QA user;
 - messenger activation;
-- WebSocket auth and global sync;
-- direct text send across two clients;
-- Android-to-Windows and Windows-to-Android direct E2EE;
-- storage upload/bind/grant/stream for each media kind;
+- WebSocket auth и global sync;
+- direct text send между двумя clients;
+- Android-to-Windows и Windows-to-Android direct E2EE;
+- storage upload/bind/grant/stream для каждого media kind;
 - calls join/invite/end;
-- feedback report upload with sanitized logs.
+- feedback report upload с sanitized logs.
 
-## Manual QA Matrix
+## Manual QA matrix
 
-### App Shell
+### App shell
 
-- Fresh install opens unauthenticated state.
-- Login restores shell.
-- Restart restores route safely.
-- Local lock prevents content flash.
+- Fresh install открывает unauthenticated state.
+- Login восстанавливает shell.
+- Restart безопасно восстанавливает route.
+- Local lock не допускает content flash.
 - RU/EN switching.
 - Light/dark switching.
 - Resize compact/normal/wide.
@@ -97,9 +97,9 @@ Against dev contour:
 - Wrong password.
 - Refresh after restart.
 - Logout clears tokens.
-- 2FA TOTP entry, owner/manual if required.
+- 2FA TOTP entry, owner/manual если требуется.
 - 2FA backup code.
-- Password recovery entry and backend-supported flow if in scope.
+- Password recovery entry и backend-supported flow, если в scope.
 
 ### Chats
 
@@ -111,8 +111,8 @@ Against dev contour:
 - Channel open.
 - Comments open.
 - Back/forward navigation.
-- No previous chat flash on switch.
-- Empty state waits for load settle.
+- Нет flash предыдущего чата при switch.
+- Empty state ждет load settle.
 
 ### Messaging
 
@@ -129,7 +129,7 @@ Against dev contour:
 
 ### Media
 
-For image, gif, video, audio, voice, pdf, file:
+Для image, gif, video, audio, voice, pdf, file:
 
 - attach;
 - upload progress;
@@ -140,16 +140,16 @@ For image, gif, video, audio, voice, pdf, file:
 - restart open;
 - failed upload retry/cancel.
 
-### Structured Chats
+### Structured chats
 
 - Create group.
 - Create channel.
 - Edit title/about/avatar.
-- Add member/subscriber by allowed search contract.
+- Add member/subscriber по разрешенному search contract.
 - Raw numeric ID add rejected in UI.
-- Promote/restrict/remove/ban where permission allows.
+- Promote/restrict/remove/ban там, где permission allows.
 - Member device reflects access changes.
-- Channel comments enable/disable where supported.
+- Channel comments enable/disable там, где supported.
 
 ### Calls
 
@@ -174,30 +174,29 @@ For image, gif, video, audio, voice, pdf, file:
 - Hide notification message preview.
 - Cache stats/limit/clear.
 - Network check.
-- Active session current-device info with no raw device ID.
+- Active session current-device info без raw device ID.
 - Feedback with screenshot and sanitized logs.
 
 ## Security QA
 
-- Log scan for bearer tokens, refresh tokens, auth codes.
-- Confirm no bearer token in WebSocket/HTTP URLs.
-- Confirm notification payloads are metadata-only.
-- Confirm direct message plaintext appears only after local decrypt.
-- Confirm local DB/protected storage cannot be read as plaintext from ordinary files.
-- Confirm feedback bundle redaction.
-- Confirm native module inputs cannot crash the app with malformed media descriptors.
+- Log scan на bearer tokens, refresh tokens, auth codes.
+- Подтвердить, что bearer token не попадает в WebSocket/HTTP URLs.
+- Подтвердить, что notification payloads являются metadata-only.
+- Подтвердить, что direct message plaintext появляется только после local decrypt.
+- Подтвердить, что local DB/protected storage не читаются как plaintext из ordinary files.
+- Подтвердить feedback bundle redaction.
+- Подтвердить, что native module inputs не crash-ат app на malformed media descriptors.
 
-## Evidence Requirements
+## Evidence requirements
 
-Each QA row needs:
+Каждая QA row требует:
 
 - build/version;
 - OS/version/locale;
 - account/device topology;
 - steps;
 - expected/actual;
-- screenshots or UI automation output when visual;
+- screenshots или UI automation output, если проверка visual;
 - logs with secrets redacted;
-- backend evidence when behavior is server-authoritative;
-- local DB/cache evidence when persistence is the claim.
-
+- backend evidence, если behavior server-authoritative;
+- local DB/cache evidence, если заявляется persistence.

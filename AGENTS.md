@@ -1,9 +1,10 @@
-# AGENTS.md instructions for APSApp_windows_client
+# AGENTS.md для APSApp_windows_client
 
 ## Рабочие правила
 
 - Пользуйся скилами, когда задача совпадает с доступным skill.
-- Этот репозиторий spec-first до появления runtime-кода: не добавляй реализацию, которая противоречит `docs/SPEC.md` и ADR.
+- Вся документация в этом репозитории пишется на русском языке. Английский допустим только для технических терминов, названий стеков, API, команд, файлов, классов, интерфейсов, protocol events, status labels и устоявшихся identifiers.
+- Этот репозиторий `spec-first` до появления runtime-кода: не добавляй реализацию, которая противоречит `docs/SPEC.md` и ADR.
 - Если что-то не получается, не уходи в обходной путь без согласования с владельцем.
 - Спорь с владельцем, если предлагается технически рискованное решение.
 - Не копируй секреты, токены, пароли, TOTP secrets, private keys, production logs или raw local-only paths в репозиторий.
@@ -32,4 +33,3 @@
 - Для Windows QA проверять минимум: Windows 10 22H2, Windows 11 current, x64, русскую локаль, светлую/темную тему, fresh install, upgrade install, restart/resume.
 - Для уведомлений и E2EE проверять privacy boundary: cloud/push payload не содержит plaintext сообщения.
 - Для media/calls проверять не только UI, но и backend evidence, локальное состояние, reconnect, cache loss, restart.
-

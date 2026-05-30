@@ -1,10 +1,10 @@
-# API Contracts
+# API-контракты
 
-Updated: 2026-05-30
+Обновлено: 2026-05-30
 
-This document records the backend surfaces the Windows client consumes. It does not replace upstream backend docs; it maps them into Windows-client responsibilities.
+Документ фиксирует backend surfaces, которые потребляет Windows-клиент. Он не заменяет upstream backend docs, а отображает их на обязанности Windows-клиента.
 
-## Runtime Hosts
+## Runtime hosts
 
 Production:
 
@@ -17,33 +17,33 @@ Production:
 | Calls runtime | `https://calls.messenger.app.aplocal.ru/` |
 | Update runtime | `https://update1.app.aplocal.ru/` |
 
-Dev contour mirrors Android policy and must be configured explicitly. Dev must never silently fall back to prod Firebase/push-style config or prod secrets.
+Dev contour повторяет Android policy и должен включаться явно. Dev не должен молча fallback-иться на prod config, prod Firebase/push-style config или prod secrets.
 
-## Core Backend
+## Core backend
 
-Source: `APSApp_app_backend/docs/API.md`.
+Источник: `APSApp_app_backend/docs/API.md`.
 
-Windows uses core backend for:
+Windows использует core backend для:
 
 - login / refresh / current user;
-- public auth exchange and signup-complete style flows when available for desktop;
+- public auth exchange и signup-complete style flows, если они доступны для desktop;
 - 2FA challenge verification;
 - profile/account settings;
-- chat directory/contact search and contact add;
+- chat directory/contact search и contact add;
 - permissions/ACL snapshot;
 - feedback reports;
-- update metadata if Windows update channel uses core proxy later.
+- update metadata, если Windows update channel позже использует core proxy.
 
-Rules:
+Правила:
 
-- Bearer token must be sent in `Authorization` header only.
-- `X-Device-ID` or equivalent desktop device header must match backend contract once established.
-- OAuth/provider secrets never live in the client repo.
-- User-visible auth errors are normalized and localized.
+- Bearer token передается только в `Authorization` header.
+- `X-Device-ID` или эквивалентный desktop device header должен соответствовать backend contract после его фиксации.
+- OAuth/provider secrets не живут в client repo.
+- User-visible auth errors нормализуются и локализуются.
 
 ## Messenger WebSocket
 
-Source: `APSApp_android_app/docs/module_messenger/INTEGRATION_CONTRACT.md`.
+Источник: `APSApp_android_app/docs/module_messenger/INTEGRATION_CONTRACT.md`.
 
 Endpoint:
 
@@ -51,7 +51,7 @@ Endpoint:
 GET /ws
 ```
 
-Canonical auth frame:
+Каноничный auth frame:
 
 ```json
 {
@@ -78,17 +78,17 @@ Server-to-client event families:
 - `contacts_changed`
 - `error`
 
-Rules:
+Правила:
 
-- Query-parameter token auth is forbidden.
-- Startup/reconnect runs sync catch-up before old unresolved outbox replay.
-- Outgoing group text becomes locally `SENT` only after exact `clientId` ack or authoritative sync reconciliation.
-- Own-message replay merges by `clientId` first and `sid` second.
-- Contacts changed event is only a dirty signal; Windows fetches the authoritative contact snapshot.
+- Query-parameter token auth запрещен.
+- Startup/reconnect запускает sync catch-up до replay старого unresolved outbox.
+- Outgoing group text становится локально `SENT` только после exact `clientId` ack или authoritative sync reconciliation.
+- Own-message replay мерджится сначала по `clientId`, затем по `sid`.
+- `contacts_changed` - только dirty signal; Windows fetch-ит authoritative contact snapshot.
 
-## Key Directory and Backup
+## Key Directory и Backup
 
-Source: Android messenger integration/security docs.
+Источники: Android messenger integration/security docs.
 
 Endpoints:
 
@@ -108,34 +108,34 @@ Endpoints:
 - `GET /v1/backup/list`
 - `POST /v1/backup/rotate`
 
-Rules:
+Правила:
 
-- Same-device direct key backup restore remains same-device.
-- User-data backup is global per account; backup `device_id` is source metadata, not ownership selector.
-- Do not upload empty user-data snapshot before local data exists.
-- Windows must read gzip-encoded current envelopes and legacy readable envelopes when supported.
-- Legacy private-group runtime residue is not restored into live runtime.
+- Same-device direct key backup restore остается same-device.
+- User-data backup является global per account; backup `device_id` - source metadata, не ownership selector.
+- Нельзя upload empty user-data snapshot до появления локальных данных.
+- Windows должен читать текущие gzip-encoded envelopes и legacy readable envelopes, когда это безопасно.
+- Legacy private-group runtime residue не восстанавливается в live runtime.
 
-## Chat Metadata
+## Chat metadata
 
-Source: Android messenger integration and backend docs.
+Источник: Android messenger integration и backend docs.
 
 Endpoints:
 
 - `POST /v1/chats/group`
 - `GET /v1/chats/{chatId}/members`
 - `POST /v1/chats/{chatId}/members`
-- channel/group endpoints as defined by current messenger backend docs.
+- channel/group endpoints по текущим messenger backend docs.
 
-Rules:
+Правила:
 
-- Role-gated operations must match server ACL.
-- Raw numeric user IDs must not be exposed as user-facing search/add contract.
-- Display names follow the messenger display-name policy: no raw technical IDs as names.
+- Role-gated operations должны соответствовать server ACL.
+- Raw numeric user IDs не должны становиться user-facing search/add contract.
+- Display names следуют messenger display-name policy: raw technical IDs не показываются как имена.
 
 ## Storage v1
 
-Sources:
+Источники:
 
 - `APSApp_messenger_storage_backend/docs/02_API.md`
 - `APSApp_android_app/docs/module_messenger/INTEGRATION_CONTRACT.md`
@@ -162,17 +162,17 @@ Preferred upload chunk size:
 | `> 100 MiB` and `<= 512 MiB` | `2 MiB` |
 | `> 512 MiB` | `4 MiB` |
 
-Rules:
+Правила:
 
-- Real slicing follows storage `accepted_chunk_size`.
-- `total_size` is from final prepared payload file.
-- `409 upload_in_progress` for `scope=chat_attachment` may trigger one `cancel-active` recovery and one fresh `init`.
-- `409 upload_size_mismatch` is terminal after local reset.
-- Read/open paths use descriptor-aware streaming and file-backed cache.
+- Real slicing следует storage `accepted_chunk_size`.
+- `total_size` берется из final prepared payload file.
+- `409 upload_in_progress` для `scope=chat_attachment` может вызвать один `cancel-active` recovery и один fresh `init`.
+- `409 upload_size_mismatch` является terminal после local reset.
+- Read/open paths используют descriptor-aware streaming и file-backed cache.
 
-## Media Descriptor
+## Media descriptor
 
-Current outgoing descriptor is compatible with Android `ChatMediaDescriptor(v=3, type="att")`.
+Текущий outgoing descriptor совместим с Android `ChatMediaDescriptor(v=3, type="att")`.
 
 Required fields where applicable:
 
@@ -198,17 +198,17 @@ Direct E2EE-only fields:
 - `enc_chunk_plain_size`
 - transport fields `k` and `iv`
 
-Private structured group/channel/comment descriptors must not persist or synthesize direct transport secrets.
+Private structured group/channel/comment descriptors не должны persist или synthesize direct transport secrets.
 
-## Calls Runtime
+## Calls runtime
 
-Sources:
+Источники:
 
 - `APSApp_messenger_calls_api/docs/API_SIGNALING.md`
 - `APSApp_messenger_calls_api/docs/BACKEND_ANDROID_COMPAT.md`
 - `APSApp_messenger_calls_api/docs/ARCHITECTURE.md`
 
-Windows uses calls runtime for:
+Windows использует calls runtime для:
 
 - join;
 - end;
@@ -216,21 +216,21 @@ Windows uses calls runtime for:
 - WebSocket call signaling;
 - LiveKit/WebRTC media room access.
 
-Rules:
+Правила:
 
-- Calls runtime is separate from chat runtime.
-- Chat WebSocket is not call media signaling source of truth.
-- Incoming call notification payloads must stay metadata-only.
-- UI state must tolerate invite timeout, decline, missed, cancel, reconnect and media publication failures.
+- Calls runtime отделен от chat runtime.
+- Chat WebSocket не является source of truth для call media signaling.
+- Incoming call notification payloads остаются metadata-only.
+- UI state должен выдерживать invite timeout, decline, missed, cancel, reconnect и media publication failures.
 
 ## Notifications
 
-Android uses FCM metadata-only wake/sync. Windows must preserve the privacy boundary:
+Android использует FCM как metadata-only wake/sync. Windows должен сохранить privacy boundary:
 
-- notification cloud payloads, if any, carry routing metadata only;
-- client fetches/syncs message state and locally decrypts before showing message text;
-- lock-screen message preview respects user privacy setting;
-- calls may show caller/chat metadata only as allowed by privacy setting.
+- notification cloud payloads, если появятся, содержат только routing metadata;
+- client fetch/sync-ит message state и локально decrypt-ит перед показом message text;
+- lock-screen message preview уважает privacy setting пользователя;
+- calls могут показывать caller/chat metadata только если это разрешено privacy setting.
 
-Initial Windows beta may use foreground WebSocket + local notifications before WNS exists. WNS requires a separate backend contract and ADR.
+Первый Windows beta может использовать foreground WebSocket + local notifications до появления WNS. WNS требует отдельного backend contract и ADR.
 

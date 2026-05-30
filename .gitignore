@@ -1,4 +1,4 @@
-# Build outputs
+# Артефакты сборки
 bin/
 obj/
 out/
@@ -25,7 +25,7 @@ CMakeCache.txt
 cmake-build-*/
 build/
 
-# Windows packaging
+# Windows-пакеты
 AppPackages/
 BundleArtifacts/
 *.appx
@@ -35,7 +35,7 @@ BundleArtifacts/
 *.cer
 *.pfx
 
-# Local-only configuration and secrets
+# Локальная конфигурация и секреты
 .env
 .env.*
 *.local.json
@@ -43,10 +43,9 @@ secrets/
 local/
 _local/
 
-# Logs / temp
+# Логи и временные файлы
 *.log
 *.tmp
 *.bak
 *.orig
 *.swp
-

@@ -1,68 +1,68 @@
-# Security Specification
+# Спецификация безопасности
 
-Updated: 2026-05-30
+Обновлено: 2026-05-30
 
-## Security Goals
+## Цели безопасности
 
-- Preserve Android's privacy model on Windows.
-- Keep direct 1x1 messages end-to-end encrypted.
-- Keep group/channel/private comments on the current `server_encrypted_v1` trusted-server model.
-- Keep tokens, device keys, backups and local message history protected at rest.
-- Prevent plaintext message leakage through notifications, logs, crash reports or cloud push providers.
+- Сохранить privacy model Android-клиента на Windows.
+- Оставить direct 1x1 сообщения end-to-end encrypted.
+- Оставить группы, каналы и private comments на текущей trusted-server модели `server_encrypted_v1`.
+- Защитить tokens, device keys, backups и локальную историю сообщений at rest.
+- Не допустить утечки plaintext сообщений через notifications, logs, crash reports или cloud push providers.
 
-## Threat Model
+## Threat model
 
-Primary threats:
+Основные угрозы:
 
-- stolen Windows user profile directory;
-- malware/user-level process trying to read local app files;
-- accidental token/message leakage through logs or feedback reports;
+- украденный Windows user profile directory;
+- malware/user-level process, читающий local app files;
+- случайная утечка token/message через logs или feedback reports;
 - network attacker;
-- stale sync/outbox replay after reconnect;
-- notification cloud provider receiving plaintext content;
-- native module memory-safety vulnerabilities;
-- downgrade or compatibility bugs that import old backup residue incorrectly.
+- stale sync/outbox replay после reconnect;
+- notification cloud provider, получающий plaintext content;
+- memory-safety vulnerabilities в native module;
+- downgrade или compatibility bugs, которые некорректно импортируют старый backup residue.
 
-Non-goals:
+Не цели:
 
-- protection against a fully compromised administrator/root machine;
-- hiding content from the active signed-in Windows user;
-- bypassing backend ACL decisions.
+- защита от полностью скомпрометированной administrator/root машины;
+- скрытие контента от активного signed-in Windows user;
+- обход backend ACL decisions.
 
-## Auth and Token Storage
+## Auth и token storage
 
-- Access/refresh tokens are stored in Windows Credential Locker or DPAPI-protected local storage.
-- Tokens are never stored in plaintext config files.
-- Tokens are never sent in URLs.
-- Logs must redact `Authorization`, cookies, refresh tokens, one-time auth codes and 2FA backup codes.
-- Logout removes tokens, active WebSocket credentials and push registration state.
+- Access/refresh tokens хранятся в Windows Credential Locker или DPAPI-protected local storage.
+- Tokens никогда не хранятся в plaintext config files.
+- Tokens никогда не передаются в URL.
+- Logs должны redact-ить `Authorization`, cookies, refresh tokens, one-time auth codes и 2FA backup codes.
+- Logout удаляет tokens, active WebSocket credentials и push registration state.
 
-## Device Identity
+## Device identity
 
-The desktop client has a stable per-install device identifier used for backend contracts where Android uses registration/device IDs.
+Desktop-клиент имеет стабильный per-install device identifier для backend-контрактов, где Android использует registration/device IDs.
 
-Rules:
+Правила:
 
-- Store device ID in protected local storage.
-- Do not show raw device ID in normal UI.
-- Rotate only through explicit account/device reset flow.
-- Changing device ID affects key backup and must be treated as security-sensitive.
+- Store device ID в protected local storage.
+- Не показывать raw device ID в обычном UI.
+- Rotate только через явный account/device reset flow.
+- Смена device ID влияет на key backup и считается security-sensitive.
 
 ## Direct 1x1 E2EE
 
-Direct chats follow the current Android direct E2EE model:
+Direct chats следуют текущей Android direct E2EE model:
 
-- Signal/libsignal-compatible identity, signed pre-key, one-time pre-key and session behavior.
-- Server stores ciphertext and key directory metadata, not plaintext.
-- Decryption failure is a visible local state, not a reason to synthesize fake plaintext.
-- Key backup restore is same-device for direct private state.
+- Signal/libsignal-compatible identity, signed pre-key, one-time pre-key и session behavior.
+- Server хранит ciphertext и key directory metadata, не plaintext.
+- Decryption failure - видимое локальное состояние, а не причина synthesise-ить fake plaintext.
+- Key backup restore является same-device для direct private state.
 
 Implementation:
 
-- The C# app depends on `IPrivateChatCrypto`.
-- The concrete crypto engine may be native if required.
-- Native crypto ABI must be narrow and versioned.
-- Test vectors and Android parity tests are mandatory before beta.
+- C# app зависит от `IPrivateChatCrypto`.
+- Concrete crypto engine может быть native, если это требуется.
+- Native crypto ABI должен быть узким и versioned.
+- Test vectors и Android parity tests обязательны до beta.
 
 ## Group / Channel / Private Comments
 
@@ -72,83 +72,83 @@ Live privacy model:
 - signed `enc=4` envelopes
 - `private_server` media/storage contract
 
-Rules:
+Правила:
 
-- Do not resurrect historical sender-key/private-group Android residue.
-- Do not persist client transport secrets in private structured descriptors.
-- Do not treat group/private-channel media as direct E2EE media.
+- Не resurrect-ить historical sender-key/private-group Android residue.
+- Не persist-ить client transport secrets в private structured descriptors.
+- Не трактовать group/private-channel media как direct E2EE media.
 
-## Local Database Protection
+## Защита локальной базы
 
 Beta gate:
 
-- Chat history, outbox, media descriptors and sync state must be encrypted at rest or contain only encrypted payloads with DPAPI-protected keys.
-- Token/key material must not be inside the ordinary DB without separate protection.
-- Local DB migration tests must prove old incompatible residue is ignored safely.
+- Chat history, outbox, media descriptors и sync state должны быть encrypted at rest или содержать только encrypted payloads с DPAPI-protected keys.
+- Token/key material не должен быть внутри ordinary DB без отдельной защиты.
+- Local DB migration tests должны доказывать, что old incompatible residue безопасно игнорируется.
 
 Preferred approach:
 
 ```text
 DPAPI / Credential Locker
-  protects local master key
+  защищает local master key
 
-Encrypted SQLite or encrypted payload columns
-  protects chat history and sensitive metadata
+Encrypted SQLite или encrypted payload columns
+  защищает chat history и sensitive metadata
 
 App-private cache
-  stores media temp files, cleared by cache policy
+  хранит media temp files и очищается cache policy
 ```
 
-## Media Security
+## Media security
 
 Direct 1x1:
 
-- media remains client-encrypted;
-- descriptors may carry direct transport crypto fields where current contract allows;
-- local decrypt must stream to app-private cache when platform playback requires a file.
+- media остается client-encrypted;
+- descriptors могут нести direct transport crypto fields там, где current contract это разрешает;
+- local decrypt должен stream-ить в app-private cache, если platform playback требует файл.
 
 Group/channel/comments:
 
-- storage mode is `private_server`;
-- descriptors must not include direct `k/iv`;
-- access is server-authorized through grant/stream.
+- storage mode: `private_server`;
+- descriptors не должны включать direct `k/iv`;
+- access авторизуется server-side через grant/stream.
 
-All modes:
+Все режимы:
 
-- Do not read large remote media fully into memory.
-- Notification previews must not reconstruct large/encrypted media.
-- Cache loss must use descriptor-aware repair, not legacy URL fallbacks.
+- Не читать large remote media целиком в memory.
+- Notification previews не должны reconstruct large/encrypted media.
+- Cache loss должен идти через descriptor-aware repair, не через legacy URL fallbacks.
 
 ## Notifications
 
 Privacy boundary:
 
-- No plaintext message body in cloud push payloads.
-- Metadata-only wake/sync signal if WNS or another cloud push is added.
-- Client can show plaintext only after local fetch and local decrypt, and only if user privacy settings allow previews.
-- Lock-screen previews obey "hide message content" setting.
+- Никакого plaintext message body в cloud push payloads.
+- Metadata-only wake/sync signal, если появится WNS или другой cloud push.
+- Client может показать plaintext только после local fetch и local decrypt, и только если user privacy settings разрешают previews.
+- Lock-screen previews уважают настройку "hide message content".
 
-## TLS and Network Security
+## TLS и network security
 
-- System trust TLS validation is mandatory.
-- Dev contour may disable pinning only if documented and explicit; it must not disable TLS validation.
-- Production certificate pinning should be evaluated before beta, matching Android's pinning posture where feasible for Windows.
-- HTTP logging must redact sensitive headers and message bodies.
+- System trust TLS validation обязательна.
+- Dev contour может отключать pinning только явно и документированно; TLS validation отключать нельзя.
+- Production certificate pinning нужно оценить до beta, сохраняя posture Android там, где это реально для Windows.
+- HTTP logging должен redact-ить sensitive headers и message bodies.
 
-## Native Code Rules
+## Правила native code
 
 Native C/C++ modules:
 
-- are allowed only behind narrow interfaces;
-- must not parse arbitrary backend JSON unless unavoidable;
-- must be fuzz/testable for untrusted binary/media input;
-- must not own auth/session state;
-- must expose exception-free ABI boundaries;
-- must be built with modern compiler hardening flags.
+- разрешены только за узкими interfaces;
+- не должны parse-ить arbitrary backend JSON без необходимости;
+- должны быть fuzz/testable для untrusted binary/media input;
+- не владеют auth/session state;
+- expose-ят exception-free ABI boundaries;
+- собираются с modern compiler hardening flags.
 
-## Feedback and Diagnostics
+## Feedback и diagnostics
 
-Feedback reports may include:
+Feedback reports могут включать:
 
 - app version/build;
 - OS version;
@@ -156,20 +156,20 @@ Feedback reports may include:
 - sanitized logs;
 - optional user-selected screenshots.
 
-Feedback reports must not include:
+Feedback reports не должны включать:
 
 - tokens/passwords/TOTP secrets;
 - private keys;
 - raw backup payloads;
-- plaintext message bodies unless user explicitly attaches a screenshot containing them;
+- plaintext message bodies, кроме случая, когда user сам явно attached screenshot с таким содержимым;
 - unredacted local file paths.
 
-## Security Release Gates
+## Security release gates
 
-- No bearer tokens in URLs verified by tests/log scan.
-- Notification payload privacy verified with backend/client evidence.
-- Local DB encryption/protection verified by filesystem inspection and code tests.
-- Direct E2EE Android interoperability verified.
-- Backup restore imports no fake `Attachment` placeholders or unresolved local transport rows.
-- Native modules have unit tests and memory-safety review before release.
+- Тестами/log scan подтверждено, что bearer tokens не попадают в URL.
+- Notification payload privacy подтверждена backend/client evidence.
+- Local DB encryption/protection подтверждена filesystem inspection и code tests.
+- Direct E2EE interoperability с Android подтверждена.
+- Backup restore не импортирует fake `Attachment` placeholders или unresolved local transport rows.
+- Native modules имеют unit tests и memory-safety review до release.
 

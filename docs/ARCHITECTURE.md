@@ -1,10 +1,10 @@
-# Windows Architecture
+# Архитектура Windows-клиента
 
-Updated: 2026-05-30
+Обновлено: 2026-05-30
 
-## Overview
+## Обзор
 
-The Windows client is a native desktop app built around a managed C# shell and domain layer, with optional C/C++ native islands. The architecture mirrors Android's product boundaries but uses Windows-native interaction and lifecycle patterns.
+Windows-клиент - нативное desktop-приложение с managed C# shell/domain layer и опциональными C/C++ native islands. Архитектура повторяет продуктовые границы Android-клиента, но использует Windows-native lifecycle, layout и interaction patterns.
 
 ```text
 WinUI 3 shell
@@ -26,67 +26,67 @@ Native island boundary
   WebRTC/media, libsignal/crypto bindings, hot paths, Windows interop
 ```
 
-## Module Ownership
+## Ownership модулей
 
-| Module | Responsibility |
+| Модуль | Ответственность |
 |---|---|
-| `APSApp.Windows` | App startup, WinUI shell, navigation, resources, app lifecycle, notifications UI |
-| `APSApp.Client.Core` | Domain models, state machines, interfaces, shared result/error types |
-| `APSApp.Client.Infrastructure` | HTTP/WS clients, auth handlers, storage, DB, settings, logging, OS adapters |
-| `APSApp.Client.Messenger` | Chat repository, E2EE facade, outbox, timeline, media descriptors, backup flows |
-| `APSApp.Client.Calls` | Calls state, call history, LiveKit/WebRTC facade, device selection |
-| `APSApp.Client.Native` | Narrow native C/C++ bridge, only after a justified need |
+| `APSApp.Windows` | App startup, WinUI shell, navigation, resources, app lifecycle и notifications UI |
+| `APSApp.Client.Core` | Domain models, state machines, interfaces и общие result/error types |
+| `APSApp.Client.Infrastructure` | HTTP/WS clients, auth handlers, storage, DB, settings, logging и OS adapters |
+| `APSApp.Client.Messenger` | Chat repository, E2EE facade, outbox, timeline, media descriptors и backup flows |
+| `APSApp.Client.Calls` | Calls state, call history, LiveKit/WebRTC facade и device selection |
+| `APSApp.Client.Native` | Узкий native C/C++ bridge, только после обоснованной необходимости |
 
-## Why Not All C++
+## Почему не полностью C++
 
-All-C++ would be technically possible with C++/WinRT and WinUI 3, but it is not the best default for this app. Most of the client is UI state, auth, sync, persistence, DTO mapping, settings, QA-oriented instrumentation and error handling. C# reduces product risk, improves iteration speed and gives safer defaults for a large desktop app. C/C++ is kept for domains where it is actually the right tool.
+Полностью C++ вариант технически возможен через C++/WinRT и WinUI 3, но это не лучший default для этого приложения. Большая часть клиента - это UI state, auth, sync, persistence, DTO mapping, settings, QA-oriented instrumentation и error handling. C# снижает продуктовый риск, ускоряет итерации и дает более безопасные defaults для крупного desktop-приложения. C/C++ оставляем там, где он действительно является правильным инструментом.
 
-## Qt Boundary
+## Граница Qt
 
-Qt is not primary because the product goal is a Windows-native client, not a cross-platform desktop shell. Qt would add another UI/runtime abstraction while weakening direct alignment with MSIX, WinUI, Windows notifications, Credential Locker, DPAPI and Windows app lifecycle. If a Linux/macOS desktop client becomes a product goal, write a new ADR before revisiting Qt.
+Qt не является основным стеком, потому что продуктовая цель - Windows-native client, а не cross-platform desktop shell. Qt добавит дополнительную UI/runtime абстракцию и ослабит прямое соответствие MSIX, WinUI, Windows notifications, Credential Locker, DPAPI и Windows app lifecycle. Если Linux/macOS desktop client станет продуктовой целью, перед возвращением к Qt нужен новый ADR.
 
-## Threading Model
+## Threading model
 
-- UI state is updated on the WinUI dispatcher thread only.
-- Network, storage, crypto and media work runs off the UI thread.
-- Long operations accept `CancellationToken`.
-- WebSocket reconnect and sync are serialized through domain-level coordinators, not view code.
-- Native calls must be non-blocking or explicitly offloaded.
+- UI state обновляется только на WinUI dispatcher thread.
+- Network, storage, crypto и media работа выполняется вне UI thread.
+- Долгие операции принимают `CancellationToken`.
+- WebSocket reconnect и sync сериализуются через domain-level coordinators, а не через view code.
+- Native calls должны быть non-blocking или явно выполняться off UI thread.
 
-## Navigation
+## Навигация
 
-Desktop navigation is not a phone nav graph copy. It uses adaptive layout:
+Desktop navigation не копирует phone nav graph. Используется adaptive layout:
 
-- compact: single content pane;
+- compact: один content pane;
 - normal: list + detail;
-- wide: list + conversation + info/details.
+- wide: список + conversation + info/details.
 
-Route state must be explicit and serializable only when safe. Sensitive media requests, decrypted payloads and keys must not be put into navigation state.
+Route state должен быть явным и сериализуемым только там, где это безопасно. Sensitive media requests, decrypted payloads и keys нельзя класть в navigation state.
 
-## Network Layer
+## Network layer
 
-The network layer uses named typed clients:
+Network layer использует named typed clients:
 
-- Core backend: auth, profile, directory, settings, feedback.
-- Chat backend: WebSocket, keys, reports, chats metadata.
+- Core backend: auth, profile, directory, settings и feedback.
+- Chat backend: WebSocket, keys, reports и chats metadata.
 - Storage backend: media upload/bind/grant/stream.
 - Calls backend: call join/invite/end/signaling bootstrap.
-- Update backend: Windows update metadata only if ADR-002 enables it.
+- Update backend: Windows update metadata только если ADR-002 разрешит такой канал.
 
-All authenticated requests include `Authorization: Bearer <jwt>` and a stable desktop device identifier header where backend contract requires it. Query token auth is forbidden.
+Все authenticated requests передают `Authorization: Bearer <jwt>` и стабильный desktop device identifier header, если backend contract этого требует. Query token auth запрещен.
 
-## Local Storage
+## Локальное хранение
 
-Local storage is split by sensitivity:
+Локальное хранение разделено по sensitivity:
 
-- Credential Locker / DPAPI: tokens, local encryption keys, device secret material.
-- Encrypted SQLite or encrypted payload columns: chat history, outbox, media descriptors, sync state.
+- Credential Locker / DPAPI: tokens, local encryption keys и device secret material.
+- Encrypted SQLite или encrypted payload columns: chat history, outbox, media descriptors, sync state.
 - Plain app settings: non-sensitive UI preferences.
-- App-private cache: media thumbnails, decrypted temp playback files, upload payloads.
+- App-private cache: media thumbnails, decrypted temp playback files и upload payloads.
 
-## E2EE / Crypto Boundary
+## E2EE / crypto boundary
 
-Direct 1x1 E2EE must be compatible with Android's current Signal/libsignal model. Since the primary app is C#, the crypto implementation must be abstracted:
+Direct 1x1 E2EE должен быть совместим с текущей Android-моделью Signal/libsignal. Так как основной app слой на C#, crypto implementation абстрагируется:
 
 ```text
 IPrivateChatCrypto
@@ -97,24 +97,24 @@ IPrivateChatCrypto
   RestoreSameDeviceKeyBackupAsync
 ```
 
-The backing implementation may be native if the available managed option is not production-grade. Product code must not depend on native-specific types.
+Backing implementation может быть native, если доступный managed-вариант недостаточно production-grade. Product code не должен зависеть от native-specific types.
 
-## Media Boundary
+## Media boundary
 
-Media handling is split:
+Media handling разделен:
 
-- managed: descriptor parsing, upload orchestration, cache policy, UI state;
-- native or proven library: WebRTC, codec-heavy paths, accelerated transforms if required.
+- managed: descriptor parsing, upload orchestration, cache policy и UI state;
+- native или проверенная library: WebRTC, codec-heavy paths, accelerated transforms, если нужно.
 
-Large media must use file/stream paths. Do not materialize full remote attachments in memory for open, preview, recovery or notification preview.
+Большие media должны идти через file/stream paths. Нельзя материализовать полный remote attachment в memory для open, preview, recovery или notification preview.
 
 ## Observability
 
-Client logs are local-first and redacted. Feedback reports can upload sanitized diagnostics through the core backend feedback path. The Windows client must not talk directly to Prometheus, Loki, Grafana or backend-internal hosts.
+Client logs являются local-first и redacted. Feedback reports могут загружать sanitized diagnostics через core backend feedback path. Windows-клиент не должен ходить напрямую в Prometheus, Loki, Grafana или backend-internal hosts.
 
-## Error Model
+## Error model
 
-Backend and transport errors are normalized into domain errors:
+Backend и transport errors нормализуются в domain errors:
 
 - auth expired / refresh failed;
 - offline / DNS / TLS / timeout;
@@ -125,5 +125,4 @@ Backend and transport errors are normalized into domain errors:
 - decrypt failed;
 - local storage unavailable.
 
-User-facing errors must be localized and non-technical. Diagnostic details go to redacted logs.
-
+User-facing errors должны быть локализованы и не быть техническими. Diagnostic details пишутся только в redacted logs.

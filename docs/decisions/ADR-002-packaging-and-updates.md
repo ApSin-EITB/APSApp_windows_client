@@ -1,79 +1,79 @@
-# ADR-002: Package Windows Client as MSIX First
+# ADR-002: Windows-клиент упаковывается через MSIX first
 
-## Status
+## Статус
 
 Proposed
 
-## Date
+## Дата
 
 2026-05-30
 
-## Context
+## Контекст
 
-Android has store and sideload-specific OTA behavior. Windows needs its own packaging and update policy. A desktop client must integrate with Windows notifications, identity, install/upgrade behavior and local data migration.
+У Android есть store/sideload-specific OTA поведение. Windows-клиенту нужна собственная политика packaging и updates. Desktop-клиент должен корректно интегрироваться с Windows notifications, app identity, install/upgrade behavior и migration локальных данных.
 
-## Decision
+## Решение
 
-Use MSIX as the first-class packaging target for beta and release. Allow unpackaged launch only for developer builds.
+MSIX является основным packaging target для beta и release. Unpackaged launch разрешен только для developer builds.
 
 Update policy:
 
-- P0 beta: manual signed MSIX distribution.
-- P1: app-installer or owner-approved update channel if needed.
-- Future: Microsoft Store only if owner chooses store distribution.
+- P0 beta: ручная раздача signed MSIX.
+- P1: `appinstaller` или owner-approved update channel, если понадобится.
+- Future: Microsoft Store только если владелец выберет store distribution.
 
-Android APK OTA rules do not apply directly to Windows.
+Android APK OTA правила напрямую к Windows не применяются.
 
-## Alternatives Considered
+## Рассмотренные альтернативы
 
 ### Raw executable / zip
 
-Pros:
+Плюсы:
 
-- fastest to start;
-- simple for internal dev.
+- быстрее стартовать;
+- просто для internal dev.
 
-Cons:
+Минусы:
 
-- weaker install/update identity;
-- harder notification/deep-link integration;
-- easier to lose migration guarantees.
+- слабее install/update identity;
+- сложнее notification/deep-link integration;
+- проще потерять migration guarantees.
 
-Allowed for local dev only, not release.
+Разрешено только для local dev, не для release.
 
 ### MSIX
 
-Pros:
+Плюсы:
 
 - Windows-native packaging;
-- clean install/upgrade identity;
-- good fit for notifications, app links, future Store;
-- safer uninstall behavior.
+- чистая install/upgrade identity;
+- хорошо подходит для notifications, app links и будущего Store;
+- безопаснее uninstall behavior.
 
-Cons:
+Минусы:
 
-- signing required;
-- packaging constraints need early attention.
+- нужна подпись;
+- packaging constraints нужно учитывать рано.
 
-Accepted as release path.
+Принято как release path.
 
-### Microsoft Store From Day One
+### Microsoft Store с первого дня
 
-Pros:
+Плюсы:
 
-- user-friendly updates;
+- удобные updates для пользователя;
 - store trust/distribution.
 
-Cons:
+Минусы:
 
-- extra compliance/review loop before client is stable;
-- owner has not selected this channel yet.
+- лишний compliance/review loop до стабилизации клиента;
+- владелец пока не выбрал этот канал.
 
-Deferred.
+Отложено.
 
-## Consequences
+## Последствия
 
-- Release build must produce signed MSIX before beta.
-- Local storage paths and migration must be tested across MSIX upgrades.
-- Update UX must not copy Android OTA assumptions blindly.
+- Release build должен производить signed MSIX до beta.
+- Local storage paths и migration должны проверяться на MSIX upgrade.
+- Update UX не должен слепо копировать Android OTA assumptions.
 

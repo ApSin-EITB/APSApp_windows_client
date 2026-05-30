@@ -1,28 +1,28 @@
-# APSApp Windows Client Docs
+# Документация APSApp Windows Client
 
-Updated: 2026-05-30
+Обновлено: 2026-05-30
 
-## Primary Docs
+## Основные документы
 
-- [SPEC.md](SPEC.md) - full product/engineering specification.
-- [ARCHITECTURE.md](ARCHITECTURE.md) - architecture and technical boundaries.
-- [API_CONTRACTS.md](API_CONTRACTS.md) - backend contracts consumed by the Windows client.
-- [SECURITY.md](SECURITY.md) - threat model, secrets, tokens, E2EE, local data protection.
-- [UI_UX_SPEC.md](UI_UX_SPEC.md) - Windows IA and screen-level UX.
-- [DATA_SYNC_STORAGE.md](DATA_SYNC_STORAGE.md) - local data model, sync, backups, media cache.
-- [FEATURE_PARITY.md](FEATURE_PARITY.md) - Android-to-Windows parity map.
-- [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) - ordered implementation tasks and acceptance checks.
-- [QA_STRATEGY.md](QA_STRATEGY.md) - test plan and release gates.
+- [SPEC.md](SPEC.md) - полная продуктовая и инженерная спецификация.
+- [ARCHITECTURE.md](ARCHITECTURE.md) - архитектура и технические границы Windows-клиента.
+- [API_CONTRACTS.md](API_CONTRACTS.md) - backend/runtime контракты, которые потребляет Windows-клиент.
+- [SECURITY.md](SECURITY.md) - threat model, секреты, токены, E2EE и защита локальных данных.
+- [UI_UX_SPEC.md](UI_UX_SPEC.md) - IA Windows-клиента и screen-level UX.
+- [DATA_SYNC_STORAGE.md](DATA_SYNC_STORAGE.md) - локальная модель данных, sync, backups и media cache.
+- [FEATURE_PARITY.md](FEATURE_PARITY.md) - карта parity между Android и Windows.
+- [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) - порядок реализации и acceptance checks.
+- [QA_STRATEGY.md](QA_STRATEGY.md) - test plan и release gates.
 - [ROADMAP.md](ROADMAP.md) - implementation milestones.
 
-## ADRs
+## ADR
 
 - [decisions/ADR-001-windows-client-stack.md](decisions/ADR-001-windows-client-stack.md)
 - [decisions/ADR-002-packaging-and-updates.md](decisions/ADR-002-packaging-and-updates.md)
 
-## Canonical Upstream Sources
+## Каноничные upstream-источники
 
-The Windows client must track these upstream documents when contracts change:
+Windows-клиент должен отслеживать эти документы при изменении контрактов:
 
 - Android feature inventory: `APSApp_android_app/docs/APP_FEATURE_INVENTORY.md`
 - Android network/API: `APSApp_android_app/docs/NETWORK_AND_API.md`
@@ -30,10 +30,10 @@ The Windows client must track these upstream documents when contracts change:
 - Android messenger security: `APSApp_android_app/docs/module_messenger/SECURITY.md`
 - Android messenger data layer: `APSApp_android_app/docs/module_messenger/DATA_LAYER.md`
 - Core backend API: `APSApp_app_backend/docs/API.md`
-- Messenger storage API: `APSApp_messenger_storage_backend/docs/02_API.md` and `openapi.yaml`
+- Messenger storage API: `APSApp_messenger_storage_backend/docs/02_API.md` и `openapi.yaml`
 - Calls signaling API: `APSApp_messenger_calls_api/docs/API_SIGNALING.md`
 - Workspace rules: `aps-rules.md`
 
-## Sync Rule
+## Правило синхронизации
 
-When a backend or Android runtime contract changes, update the matching Windows spec in the same PR or record an explicit follow-up issue. Do not let this repository drift into stale parity claims.
+Если меняется backend-контракт или Android runtime contract, соответствующая Windows-спецификация обновляется в том же PR или фиксируется отдельная follow-up задача. Нельзя оставлять этот репозиторий со stale parity-утверждениями.

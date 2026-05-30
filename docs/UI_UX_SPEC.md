@@ -1,12 +1,12 @@
-# UI / UX Specification
+# UI / UX спецификация
 
-Updated: 2026-05-30
+Обновлено: 2026-05-30
 
-## Design Direction
+## Направление дизайна
 
-The Windows client should feel like a serious native desktop messenger, not a stretched phone app. It should keep APSApp's product model while using desktop strengths: persistent panes, keyboard navigation, hover/context menus, drag-and-drop attachments, native notifications and resize-aware layout.
+Windows-клиент должен ощущаться как серьезный native desktop messenger, а не как растянутый phone app. Он сохраняет product model APSApp, но использует desktop strengths: persistent panes, keyboard navigation, hover/context menus, drag-and-drop attachments, native notifications и resize-aware layout.
 
-## Top-Level IA
+## Top-level IA
 
 Top-level surfaces:
 
@@ -18,11 +18,11 @@ Desktop layout:
 
 | Width | Layout |
 |---|---|
-| Compact | one pane, route stack |
+| Compact | один pane, route stack |
 | Normal | list pane + detail pane |
 | Wide | list pane + conversation/call detail + info/settings side pane |
 
-## App Bootstrap
+## App bootstrap
 
 States:
 
@@ -31,40 +31,40 @@ States:
 - locked local session;
 - unauthenticated;
 - authenticated shell;
-- fatal local storage/config error.
+- fatal error локального storage/config.
 
-Rules:
+Правила:
 
-- Do not flash authenticated content before local lock validation.
-- Do not show stale route content before current account/session is confirmed.
-- Startup errors use localized, non-technical text with diagnostics available in logs.
+- Не flash-ить authenticated content до local lock validation.
+- Не показывать stale route content до подтверждения current account/session.
+- Startup errors используют localized non-technical text; diagnostics доступны в logs.
 
-## Auth Screens
+## Auth screens
 
-Required:
+Обязательно:
 
 - login identifier/password;
-- create-account entry if backend/owner wants desktop registration live;
+- create-account entry, если backend/owner хочет live desktop registration;
 - password recovery entry;
 - 2FA challenge screen;
 - backup-code mode switch;
 - privacy policy link.
 
-P0 can prioritize existing-account login plus 2FA if provider/OAuth desktop flows need separate owner validation.
+P0 может сначала сфокусироваться на existing-account login + 2FA, если provider/OAuth desktop flows требуют отдельной owner validation.
 
 ## Chats
 
-### Chat List
+### Chat list
 
 Required states:
 
 - loading;
 - empty;
 - offline with cached data;
-- authenticated but messenger inactive;
-- loaded with unread/pin/mute/typing metadata;
+- authenticated, но messenger inactive;
+- loaded state с unread/pin/mute/typing metadata;
 - search mode;
-- contact requests visible when present.
+- contact requests показываются, когда они есть.
 
 Actions:
 
@@ -72,9 +72,9 @@ Actions:
 - search chats/people/channels;
 - create group/channel;
 - accept/reject contact request;
-- context menu: pin, mute presets, rename/local alias where allowed, add contact, profile, delete/hide, tab assignment where implemented.
+- context menu: pin, mute presets, rename/local alias where allowed, add contact, profile, delete/hide и tab assignment where implemented.
 
-### Search / Discovery
+### Search / discovery
 
 Tabs:
 
@@ -82,22 +82,22 @@ Tabs:
 - People
 - Channels
 
-Rules:
+Правила:
 
-- Raw numeric IDs are not a user-facing add/search mechanism.
-- Results show display name, nickname/handle where safe, avatar, relation state.
-- Opening a result respects backend access.
+- Raw numeric IDs не являются user-facing add/search mechanism.
+- Results показывают display name, nickname/handle where safe, avatar, relation state.
+- Opening result должен respect backend access.
 
 ### Conversation
 
 Header:
 
-- back/close in compact mode;
+- back/close в compact mode;
 - avatar;
 - title;
 - status/typing/online/channel state;
-- call actions when direct chat supports them;
-- overflow for notifications, search, delete/hide, info.
+- call actions, если direct chat их поддерживает;
+- overflow для notifications, search, delete/hide, info.
 
 Timeline:
 
@@ -114,16 +114,16 @@ Timeline:
 - failed send/retry state;
 - read-only channel/comment states.
 
-Rules:
+Правила:
 
-- Switching chats clears previous route rows before target data binds.
-- Empty state appears only after route load settles.
-- Timeline virtualization is mandatory.
-- Context actions must respect message ownership, chat type and permissions.
+- Switching chats очищает previous route rows до bind target data.
+- Empty state появляется только после route load settle.
+- Timeline virtualization обязательна.
+- Context actions уважают message ownership, chat type и permissions.
 
 ### Composer
 
-Required:
+Обязательно:
 
 - text input;
 - reply/edit banner;
@@ -133,15 +133,15 @@ Required:
 - attachment draft strip;
 - send/cancel actions;
 - max 10 attachment drafts;
-- send-as-original for still images.
+- send-as-original для still images.
 
-Rules:
+Правила:
 
-- Multi-attachment send waits for all slots to have storage `binding_id`.
-- File preparation must not freeze UI.
-- Large files show progress and can fail/retry clearly.
+- Multi-attachment send ждет storage `binding_id` у всех slots.
+- File preparation не должна freeze-ить UI.
+- Large files показывают progress и понятный fail/retry.
 
-## Structured Chats
+## Structured chats
 
 Screens:
 
@@ -155,16 +155,16 @@ Screens:
 
 Role-gated actions:
 
-- show only actions current user can execute;
-- avoid presenting backend-denied actions as normal buttons;
-- when permissions change live, update UI after authoritative sync.
+- показывать только actions, которые current user может выполнить;
+- не показывать backend-denied actions как обычные buttons;
+- при live permission change обновлять UI после authoritative sync.
 
 ## Calls
 
 Surfaces:
 
 - calls list/history;
-- contacts/callable people tab if contract supports it;
+- contacts/callable people tab, если contract это поддерживает;
 - incoming call window/notification;
 - active call window;
 - compact in-call controls;
@@ -179,11 +179,11 @@ Controls:
 - video layout with local/remote tiles;
 - network/connection state.
 
-Rules:
+Правила:
 
-- Incoming call must be actionable even if main window is minimized.
-- Media connect failures are recoverable when possible.
-- Call history refreshes after call end/missed/declined state.
+- Incoming call должен быть actionable, даже если main window minimized.
+- Media connect failures должны быть recoverable where possible.
+- Call history обновляется после call end/missed/declined state.
 
 ## Settings
 
@@ -203,9 +203,9 @@ Sections:
 
 Windows-only interpretation:
 
-- Battery optimization screen is omitted or replaced by Windows startup/background permission diagnostics only if a real Windows setting exists.
-- Screenshot privacy uses available Windows APIs/policies; if exact Android `FLAG_SECURE` parity is impossible, the UI must be honest and the security doc updated.
-- Windows Hello can be used as local unlock helper when available.
+- Battery optimization screen omitted или заменен на Windows startup/background permission diagnostics, только если есть реальная Windows setting.
+- Screenshot privacy использует доступные Windows APIs/policies; если точная Android `FLAG_SECURE` parity невозможна, UI честно сообщает ограничения, а security doc обновляется.
+- Windows Hello можно использовать как local unlock helper, если доступен.
 
 ## Notifications
 
@@ -214,23 +214,23 @@ Channels/categories:
 - chats;
 - calls;
 - system;
-- updates if Windows update channel exists.
+- updates, если появится Windows update channel.
 
-Rules:
+Правила:
 
-- Message content preview obeys user setting.
-- Metadata-only cloud push boundary is mandatory.
-- Notification click opens the correct route after session/local-lock handling.
-- If locked, route intent is stored and resumed after unlock.
+- Message content preview следует user setting.
+- Metadata-only cloud push boundary обязательна.
+- Notification click открывает правильный route после session/local-lock handling.
+- Если app locked, route intent сохраняется и resume-ится после unlock.
 
 ## Accessibility
 
-- Full keyboard navigation for top-level surfaces and chat list.
+- Full keyboard navigation для top-level surfaces и chat list.
 - Visible focus states.
-- Screen-reader names for icon buttons.
-- High contrast and text scaling support.
-- Reduce motion respected globally.
-- No color-only status communication.
+- Screen-reader names для icon buttons.
+- High contrast и text scaling support.
+- Reduce motion уважается globally.
+- Нельзя передавать status только через color.
 
 ## Localization
 
@@ -240,9 +240,8 @@ Languages:
 - English
 - System default mode
 
-Rules:
+Правила:
 
 - All user text in resources.
-- No developer/debug raw codes in user-facing UI.
-- Error copy is localized and non-technical.
-
+- Нельзя показывать developer/debug raw codes в user-facing UI.
+- Error copy localized и non-technical.

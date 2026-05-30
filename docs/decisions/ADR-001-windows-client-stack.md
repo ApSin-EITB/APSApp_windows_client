@@ -1,90 +1,90 @@
-# ADR-001: Use C# WinUI 3 as Primary Stack with Native C/C++ Islands
+# ADR-001: Основной стек Windows-клиента - C# WinUI 3 с нативными C/C++ островами
 
-## Status
+## Статус
 
 Accepted
 
-## Date
+## Дата
 
 2026-05-30
 
-## Context
+## Контекст
 
-The APSApp Windows client needs a native Windows desktop experience while preserving Android/backend product contracts: auth, direct E2EE, messenger sync, storage media, calls, settings, notifications and QA evidence.
+APSApp Windows Client должен быть нативным desktop-клиентом для Windows и при этом сохранять продуктовые контракты Android/backend: auth, direct E2EE, messenger sync, storage media, calls, settings, notifications и QA evidence.
 
-The owner asked why not C++, then clarified that C# is acceptable while some C/C++ may be needed, and Qt also exists as an option.
+Владелец спросил, почему не C++, затем уточнил, что C# подходит, но часть C/C++ скорее всего понадобится; также была упомянута Qt.
 
-## Decision
+## Решение
 
-Use C# + WinUI 3 / Windows App SDK as the primary app and UI stack.
+Основной app/UI стек: C# + WinUI 3 / Windows App SDK.
 
-Allow C/C++ native islands for:
+C/C++ разрешены как нативные острова для:
 
 - WebRTC/media pipeline;
-- crypto/libsignal bindings if managed options are insufficient;
+- crypto/libsignal bindings, если managed-вариант недостаточно production-grade;
 - performance hot paths;
-- low-level Windows interop where managed APIs are not enough.
+- низкоуровневого Windows interop.
 
-Qt is not the primary UI stack. Revisit Qt only if the product goal changes to cross-platform desktop.
+Qt не является основным UI stack. Возвращаться к Qt только если продуктовая цель изменится на cross-platform desktop.
 
-## Alternatives Considered
+## Рассмотренные альтернативы
 
-### All C++ / C++/WinRT
+### Полностью C++ / C++/WinRT
 
-Pros:
+Плюсы:
 
-- fully native;
-- direct access to Windows APIs;
-- useful for media and low-level interop.
+- максимально нативный стек;
+- прямой доступ к Windows API;
+- полезен для media и low-level interop.
 
-Cons:
+Минусы:
 
-- higher memory-safety and development cost for app-level UI/state/auth/sync code;
-- slower product iteration;
-- more expensive tests and future agent maintenance;
-- most APSApp client complexity is not CPU-bound.
+- выше memory-safety риск и стоимость разработки app-level UI/state/auth/sync кода;
+- медленнее продуктовые итерации;
+- дороже тестирование и сопровождение будущими агентами;
+- основная сложность APSApp-клиента не CPU-bound.
 
-Rejected as primary stack. Kept for native islands.
+Отклонено как основной стек. Оставлено для native islands.
 
 ### C# + WinUI 3
 
-Pros:
+Плюсы:
 
-- native Windows UI stack;
-- strong productivity for MVVM, async, DI, tests, settings and API clients;
-- good Windows integration with MSIX, notifications, Credential Locker/DPAPI;
-- easier for future agents/developers to maintain;
-- native interop remains available.
+- нативный Windows UI stack;
+- высокая скорость разработки для MVVM, async, DI, tests, settings и API clients;
+- хорошая интеграция с MSIX, notifications, Credential Locker/DPAPI;
+- проще сопровождение для будущих разработчиков и агентов;
+- native interop остается доступным.
 
-Cons:
+Минусы:
 
-- may need native wrappers for libsignal/WebRTC/media;
-- managed runtime is part of deployment story;
-- some low-level APIs are less direct.
+- могут понадобиться native wrappers для libsignal/WebRTC/media;
+- managed runtime становится частью deployment story;
+- часть low-level API менее прямая, чем в C++.
 
-Accepted.
+Принято.
 
 ### Qt
 
-Pros:
+Плюсы:
 
-- mature UI toolkit;
-- strong C++ ecosystem;
-- cross-platform desktop potential.
+- зрелый UI toolkit;
+- сильная C++ экосистема;
+- потенциал cross-platform desktop.
 
-Cons:
+Минусы:
 
-- not Windows-native first;
-- adds a second UI/runtime abstraction;
-- weaker alignment with WinUI, MSIX, Windows notifications and credential APIs;
-- cross-platform is not the current product goal.
+- не Windows-native first;
+- добавляет второй UI/runtime abstraction layer;
+- хуже стыкуется с WinUI, MSIX, Windows notifications и credential APIs;
+- cross-platform сейчас не является продуктовой целью.
 
-Rejected for the current Windows-native client.
+Отклонено для текущего Windows-native клиента.
 
-## Consequences
+## Последствия
 
-- First solution skeleton should be C# WinUI.
-- Native code must be narrow and explicitly justified.
-- Public app policy and backend contract interpretation stay in managed domain code.
-- Any future switch to Qt or all-C++ needs a new ADR and owner approval.
+- Первый solution skeleton должен быть на C# WinUI.
+- Native code должен быть узким и явно обоснованным.
+- Product policy и интерпретация backend-контрактов остаются в managed domain code.
+- Будущий переход на Qt или all-C++ требует нового ADR и согласования с владельцем.
 

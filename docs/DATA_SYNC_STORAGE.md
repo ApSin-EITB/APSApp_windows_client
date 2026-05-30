@@ -1,20 +1,20 @@
-# Data, Sync and Storage Specification
+# Data, Sync и Storage
 
-Updated: 2026-05-30
+Обновлено: 2026-05-30
 
-## Local Data Stores
+## Локальные хранилища
 
-Target stores:
+Целевая схема:
 
-| Store | Contents | Protection |
+| Хранилище | Данные | Защита |
 |---|---|---|
-| Credential Locker / DPAPI | tokens, local master keys, device secrets | OS-protected |
-| SQLite | chats, messages, outbox, sync cursors, media jobs, settings requiring query | encrypted DB or encrypted sensitive payloads |
-| App settings | theme/language/reduce motion/non-sensitive prefs | normal local settings |
-| App-private cache | media previews, playback temp files, upload payloads | app-private + cache policy |
+| Credential Locker / DPAPI | tokens, local master keys и device secrets | OS-protected |
+| SQLite | chats, messages, outbox, sync cursors, media jobs, queryable settings | encrypted DB или encrypted sensitive payloads |
+| App settings | theme/language/reduce motion/non-sensitive prefs | обычные local settings |
+| App-private cache | media previews, playback temp files и upload payloads | app-private + cache policy |
 | Logs | redacted diagnostics | bounded retention |
 
-## Message Persistence
+## Message persistence
 
 Persist:
 
@@ -28,46 +28,46 @@ Persist:
 - local failure states;
 - sync cursors.
 
-Do not persist:
+Не persist:
 
-- plaintext direct message content outside the protected DB/payload model;
-- token/key material in ordinary tables;
-- fake placeholder rows for unrecoverable legacy backup residue;
-- direct-only transport secrets in private structured descriptors.
+- plaintext direct message content вне protected DB/payload model;
+- token/key material в ordinary tables;
+- fake placeholder rows для unrecoverable legacy backup residue;
+- direct-only transport secrets в private structured descriptors.
 
-## Sync Model
+## Sync model
 
 Startup:
 
 1. Load protected session.
-2. Unlock local lock if required.
+2. Unlock local lock, если требуется.
 3. Restore local DB snapshot.
 4. Connect/auth WebSocket.
 5. Run global sync catch-up.
-6. Reconcile outbox only after catch-up completes or times out.
+6. Reconcile outbox только после завершения catch-up или timeout.
 
 Reconnect:
 
 - Backoff with jitter.
 - Preserve route state.
-- Avoid duplicate send of already-acked logical messages.
-- Merge own-message replay by `clientId` first, `sid` second.
+- Не duplicate-ить send для already-acked logical messages.
+- Merge own-message replay сначала по `clientId`, затем по `sid`.
 
 Contacts:
 
-- `contacts_changed` is dirty signal only.
-- Fetch authoritative contact snapshot after signal.
+- `contacts_changed` является только dirty signal.
+- После сигнала fetch-ить authoritative contact snapshot.
 
-## Outbox Rules
+## Outbox rules
 
-- Every outgoing logical message has stable `clientId`.
-- Attachment slots use stable `messageId:attachmentIndex` identity.
-- Text-only can send immediately after local outbox persist.
-- Attachment message can send only after every slot has reusable `binding_id`.
-- Retry reuses existing object/binding if valid.
-- Retry must not create duplicate per-slot outbox rows.
+- У каждого outgoing logical message стабильный `clientId`.
+- Attachment slots используют стабильную identity `messageId:attachmentIndex`.
+- Text-only message можно send-ить сразу после local outbox persist.
+- Attachment message можно send-ить только после появления reusable `binding_id` у каждого slot.
+- Retry сначала reuse-ит existing object/binding, если они валидны.
+- Retry не должен создавать duplicate per-slot outbox rows.
 
-## Media Preparation
+## Media preparation
 
 Attachment kinds:
 
@@ -79,15 +79,15 @@ Attachment kinds:
 - pdf
 - file
 
-Rules:
+Правила:
 
-- Prepare payload into app-private file first.
-- `total_size` comes from prepared payload file.
-- Image normalization and send-as-original must match descriptor semantics.
-- Large media transforms run off UI thread.
-- Thumbnails/previews are bounded and cached.
+- Сначала prepare payload в app-private file.
+- `total_size` берется из prepared payload file.
+- Image normalization и send-as-original должны соответствовать descriptor semantics.
+- Large media transforms выполняются off UI thread.
+- Thumbnails/previews bounded и cached.
 
-## Upload Jobs
+## Upload jobs
 
 Persist:
 
@@ -102,52 +102,52 @@ Persist:
 
 Recovery:
 
-- `404 upload_not_found` and `409 upload_reinit_required`: reset upload session, retry later.
-- `409 upload_in_progress` for `chat_attachment`: one `cancel-active`, reset, one fresh `init`.
-- `409 upload_size_mismatch`: terminal failure after reset.
-- Non-chat scopes do not broad auto-cancel active uploads.
+- `404 upload_not_found` и `409 upload_reinit_required`: reset upload session, retry later.
+- `409 upload_in_progress` для `chat_attachment`: один `cancel-active`, reset, один fresh `init`.
+- `409 upload_size_mismatch`: terminal failure после reset.
+- Non-chat scopes не делают broad auto-cancel active uploads.
 
-## Media Reads
+## Media reads
 
 Open/preview/playback paths:
 
 - grant;
 - descriptor;
 - stream/range;
-- file-backed cache if platform needs local file;
+- file-backed cache, если platform requires local file;
 - descriptor-aware decrypt/reconstruct.
 
-Rules:
+Правила:
 
-- No full remote original in memory for large open/preview/recovery.
-- Invalid chunked encryption metadata fails fast.
-- Encrypted notification previews do not reconstruct full media.
+- Нельзя держать full remote original в memory для large open/preview/recovery.
+- Invalid chunked encryption metadata должна fail fast.
+- Encrypted notification previews не reconstruct-ят full media.
 
-## Backup Restore
+## Backup restore
 
 Direct key backup:
 
 - same-device only;
-- successful import must be followed by `restore-complete`;
-- pure read is not proof.
+- successful import должен сопровождаться `restore-complete`;
+- pure read не является proof.
 
 User-data backup:
 
 - global per account;
-- select exact snapshots by `backup_id`;
-- rank candidates by actual content recency;
-- empty import is unsuccessful;
-- current gzip payload encoding supported;
-- legacy readable envelopes supported only when safe.
+- select exact snapshots по `backup_id`;
+- rank candidates по actual content recency;
+- empty import считается unsuccessful;
+- current gzip payload encoding поддерживается;
+- legacy readable envelopes поддерживаются только если безопасны.
 
 Import filters:
 
-- skip poison placeholders such as bare `Attachment` rows without real media;
+- skip poison placeholders, например bare `Attachment` rows без real media;
 - skip unresolved local transport rows: `ERROR`, `FAILED`, `PENDING`, `SENDING`, `QUEUED`, `UPLOADING`, `ENCRYPTING`, outgoing without server id where applicable;
-- repair chat previews that referenced skipped rows;
+- repair chat previews, которые ссылались на skipped rows;
 - skip reactions for skipped messages.
 
-## Cache Policy
+## Cache policy
 
 User settings:
 
@@ -157,14 +157,13 @@ User settings:
 
 Windows specifics:
 
-- Detect metered network where Windows exposes it.
-- Apply cache eviction in background without blocking UI.
-- Keep currently playing/open files safe from deletion until closed.
+- Detect metered network, если Windows это exposes.
+- Apply cache eviction in background без блокировки UI.
+- Не удалять currently playing/open files до close.
 
 ## Migrations
 
-- Every DB schema change has migration tests.
-- Every sensitive storage migration has rollback/failure handling.
-- Old incompatible Android/private-group backup residue must not enter live Windows runtime.
-- Dev builds can include diagnostics; release builds must not expose raw sensitive rows.
-
+- Каждое DB schema change имеет migration tests.
+- Каждая sensitive storage migration имеет rollback/failure handling.
+- Old incompatible Android/private-group backup residue не должен попасть в live Windows runtime.
+- Dev builds могут включать diagnostics; release builds не должны expose raw sensitive rows.
