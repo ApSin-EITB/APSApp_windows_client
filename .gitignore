@@ -1,0 +1,52 @@
+# Build outputs
+bin/
+obj/
+out/
+artifacts/
+TestResults/
+coverage/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# .NET
+*.nupkg
+*.snupkg
+project.assets.json
+
+# CMake / native build
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
+build/
+
+# Windows packaging
+AppPackages/
+BundleArtifacts/
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.cer
+*.pfx
+
+# Local-only configuration and secrets
+.env
+.env.*
+*.local.json
+secrets/
+local/
+_local/
+
+# Logs / temp
+*.log
+*.tmp
+*.bak
+*.orig
+*.swp
+
