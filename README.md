@@ -19,6 +19,7 @@
 | [docs/SPEC.md](docs/SPEC.md) | Полная продуктовая и инженерная спецификация |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Архитектура Windows-клиента, модули, threading, native boundaries |
 | [docs/WINDOWS_NATIVE_SPEC.md](docs/WINDOWS_NATIVE_SPEC.md) | Специфика Windows 10/11: lifecycle, окна, notifications, taskbar, DPI, accessibility и fallback-режимы |
+| [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Дизайн-система Windows: Telegram-like desktop layout без копирования, Android palette, glass rules и visual QA references |
 | [docs/API_CONTRACTS.md](docs/API_CONTRACTS.md) | Контракты Core/chat/storage/calls runtime, которые потребляет Windows |
 | [docs/SECURITY.md](docs/SECURITY.md) | Auth, token storage, E2EE, local data protection и notification privacy |
 | [docs/UI_UX_SPEC.md](docs/UI_UX_SPEC.md) | Windows UX, IA, экраны, keyboard, accessibility |
@@ -54,6 +55,9 @@ msbuild .\APSApp.Windows.sln /m /restore /p:Configuration=Release /p:Platform=x6
 Репозиторий bootstrapped из текущего APSApp workspace context:
 
 - `APSApp_android_app/docs/APP_FEATURE_INVENTORY.md`
+- `APSApp_android_app/core/ui/src/main/kotlin/ru/apsdev/lichka/core/ui/theme/Color.kt`
+- `APSApp_android_app/core/ui/src/main/kotlin/ru/apsdev/lichka/core/ui/theme/ApsDesignSystem.kt`
+- `APSApp_android_app/feature/messenger/src/main/kotlin/ru/apsdev/lichka/feature/messenger/ui/theme/MessengerThemeTokens.kt`
 - `APSApp_android_app/docs/ARCHITECTURE.md`
 - `APSApp_android_app/docs/NETWORK_AND_API.md`
 - `APSApp_android_app/docs/module_messenger/*`

@@ -4,6 +4,8 @@
 
 Источник: `APSApp_android_app/docs/APP_FEATURE_INVENTORY.md` плюс messenger/network/security docs.
 
+Визуальный parity source: `Color.kt`, `ApsDesignSystem.kt`, `MessengerThemeTokens.kt` и Android QA references из [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md). Windows не обязан копировать Android layout 1:1, но обязан сохранить APS palette, мутное стекло и readable privacy/status states.
+
 Статусы:
 
 - `P0` - обязательно для первой Windows beta.
@@ -34,6 +36,8 @@
 | Android Activity lifecycle | Windows-specific: single-instance AppActivationRouter |
 | Android window/screen sizes | Windows-specific: AppWindow, Snap Layouts, per-monitor DPI, multi-monitor |
 | Material phone surfaces | Windows-specific: WinUI NavigationView, CommandBar, Flyout/MenuFlyout, Mica/Acrylic fallback |
+| Android APS cloudy/frosted glass | P0 visual parity: Windows-native glass/fallback по `DESIGN_SYSTEM.md` |
+| Android APS palette | P0: Windows design token layer из Android palette |
 
 ## 2. Auth и onboarding
 

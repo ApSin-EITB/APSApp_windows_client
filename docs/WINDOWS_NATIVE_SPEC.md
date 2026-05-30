@@ -7,7 +7,7 @@
 
 Этот документ уточняет, как APSApp Windows Client должен использовать Windows 10/11 не как абстрактный desktop, а как нативную Windows-платформу: жизненный цикл приложения, окна, MSIX identity, уведомления, taskbar, защищенное хранилище, accessibility, DPI, файловую интеграцию и визуальные материалы.
 
-Продуктовые контракты остаются в `SPEC.md`, архитектурные границы - в `ARCHITECTURE.md`, безопасность - в `SECURITY.md`, QA - в `QA_STRATEGY.md`.
+Продуктовые контракты остаются в `SPEC.md`, архитектурные границы - в `ARCHITECTURE.md`, безопасность - в `SECURITY.md`, визуальная система - в `DESIGN_SYSTEM.md`, QA - в `QA_STRATEGY.md`.
 
 ## Источники Microsoft
 
@@ -102,6 +102,8 @@ Share target, future
 
 ## Материалы и резервные режимы
 
+Визуальный источник APSApp для materials - [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md). Windows implementation должна сохранить Android cloudy/frosted glass как продуктовый слой, но использовать нативные Windows mechanisms и fallback.
+
 | Surface | Windows 11 | Windows 10 |
 |---|---|---|
 | App backdrop | Mica/Mica Alt где уместно | Acrylic или solid theme brush |
@@ -113,6 +115,9 @@ Share target, future
 
 - Никакой важный текст, status или control не должен зависеть от Mica/Acrylic.
 - Backdrop применяется как базовый слой, не на отдельные controls.
+- Header/composer/list glass должен блюрить реальный source content, а не пустой декоративный фон.
+- Overlay chrome отделяется от source layer; nested live blur избегается, внутри source используется static frosted fill.
+- Live blur radius capped at 34 DIP, если конкретный Windows API/производительность не требуют меньшего значения.
 - В High Contrast и при выключенной transparency приложение должно оставаться читаемым.
 - Цвета берутся из theme resources; hardcoded colors допустимы только в токенах design system с contrast test.
 

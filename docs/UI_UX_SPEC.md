@@ -6,6 +6,8 @@
 
 Windows-клиент должен ощущаться как серьезный native desktop messenger, а не как растянутый phone app. Он сохраняет product model APSApp, но использует desktop strengths: persistent panes, keyboard navigation, hover/context menus, drag-and-drop attachments, native notifications и resize-aware layout.
 
+Визуальный контракт, Android-палитра, glass rules и визуальные QA-референсы зафиксированы в [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md). Этот документ описывает поведение экранов; если есть конфликт по цветам, материалам, radius или desktop layout, source-of-truth для визуального слоя - `DESIGN_SYSTEM.md`.
+
 Подробные Windows 10/11 правила: [WINDOWS_NATIVE_SPEC.md](WINDOWS_NATIVE_SPEC.md).
 
 ## Windows 10/11 native UX
@@ -37,6 +39,16 @@ Desktop layout:
 | Compact | один pane, route stack |
 | Normal | list pane + detail pane |
 | Wide | list pane + conversation/call detail + info/settings side pane |
+
+Базовая desktop-эргономика может быть знакомой пользователю Telegram-like messenger: rail, список, conversation stage и optional context pane. При этом APSApp не копирует Telegram визуально: rail, context strip, calls/settings surfaces, palette, glass и status/security zones следуют [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
+
+## Визуальная идентичность
+
+- Палитра берется из Android `Color.kt` и `MessengerThemeTokens.kt`.
+- Dark theme строится на `#061315`, `#0B1E22`, `#102A2F`, `#14B9B9`, `#35C8C5`.
+- Light theme строится на `#F6FCFB`, `#E3F3F1`, `#FFFFFF`, `#14B9B9`, `#075E66`.
+- Мутное стекло/cloudy glass сохраняется как product layer: header, composer, list shell и settings panels должны иметь видимый frosted source underlay.
+- При transparency off, High Contrast или Windows 10 fallback core state остается читаемым и не зависит от blur.
 
 ## App bootstrap
 

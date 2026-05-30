@@ -7,6 +7,7 @@
 - [SPEC.md](SPEC.md) - полная продуктовая и инженерная спецификация.
 - [ARCHITECTURE.md](ARCHITECTURE.md) - архитектура и технические границы Windows-клиента.
 - [WINDOWS_NATIVE_SPEC.md](WINDOWS_NATIVE_SPEC.md) - нативное поведение Windows 10/11, уровни поддержки, lifecycle, shell, notifications, DPI и accessibility.
+- [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) - визуальная система Windows-клиента: desktop layout, Android palette, glass rules и QA references.
 - [API_CONTRACTS.md](API_CONTRACTS.md) - backend/runtime контракты, которые потребляет Windows-клиент.
 - [SECURITY.md](SECURITY.md) - threat model, секреты, токены, E2EE и защита локальных данных.
 - [UI_UX_SPEC.md](UI_UX_SPEC.md) - IA Windows-клиента и screen-level UX.
@@ -21,12 +22,15 @@
 - [decisions/ADR-001-windows-client-stack.md](decisions/ADR-001-windows-client-stack.md)
 - [decisions/ADR-002-packaging-and-updates.md](decisions/ADR-002-packaging-and-updates.md)
 - [decisions/ADR-003-windows-support-tiers.md](decisions/ADR-003-windows-support-tiers.md)
+- [decisions/ADR-004-desktop-layout-and-android-palette.md](decisions/ADR-004-desktop-layout-and-android-palette.md)
 
 ## Каноничные upstream-источники
 
 Windows-клиент должен отслеживать эти документы при изменении контрактов:
 
 - Android feature inventory: `APSApp_android_app/docs/APP_FEATURE_INVENTORY.md`
+- Android palette/theme: `APSApp_android_app/core/ui/src/main/kotlin/ru/apsdev/lichka/core/ui/theme/Color.kt`, `ApsAppTheme.kt`, `ApsDesignSystem.kt`
+- Android messenger tokens: `APSApp_android_app/feature/messenger/src/main/kotlin/ru/apsdev/lichka/feature/messenger/ui/theme/MessengerThemeTokens.kt`
 - Android network/API: `APSApp_android_app/docs/NETWORK_AND_API.md`
 - Android messenger integration: `APSApp_android_app/docs/module_messenger/INTEGRATION_CONTRACT.md`
 - Android messenger security: `APSApp_android_app/docs/module_messenger/SECURITY.md`

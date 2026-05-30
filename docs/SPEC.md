@@ -21,6 +21,7 @@
 ### P0 Desktop Beta Scope
 
 - Windows-native shell с тремя top-level surfaces: chats, calls, settings.
+- Дизайн-система Windows: Telegram-like desktop ergonomics без копирования Telegram, Android palette, cloudy/frosted glass и визуальные QA-референсы.
 - Вход по identifier/password, token refresh, logout и восстановление current-user session.
 - Two-factor challenge support для login: TOTP и backup code entry.
 - Desktop onboarding существующего аккаунта в messenger runtime.
@@ -222,6 +223,8 @@ extern "C" __declspec(dllexport) int ApsNativeVersion() noexcept
   - compact width: один pane;
 - normal desktop: chat/call list + detail pane;
 - wide desktop: list + conversation + info/details pane where relevant.
+- Desktop layout следует [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md): APS rail, list pane, conversation/call/settings stage и optional context pane. Telegram допускается только как ergonomic reference, не как визуальный шаблон.
+- Цвета, glass surfaces, radius, typography и visual states берутся из design token layer, основанного на Android `Color.kt` и `MessengerThemeTokens.kt`.
 - Shell сохраняет route state across restart when safe.
 - App поддерживает русский и английский, по умолчанию следует Windows theme.
 - Windows 11 использует нативные visual materials where appropriate; Windows 10 получает documented fallback без потери core functionality.
@@ -322,6 +325,7 @@ extern "C" __declspec(dllexport) int ApsNativeVersion() noexcept
 - UI automation для core routes и resize/adaptive layout.
 - Native tests для C/C++ modules.
 - Manual QA matrix покрывает fresh install, upgrade, restart, reconnect, cache loss, dark/light, RU/EN, Windows 10/11.
+- Visual QA сверяет Windows dark/light shell, chat list, direct chat, comments/media, settings и calls с Android QA references из `DESIGN_SYSTEM.md`.
 - Windows-native QA отдельно покрывает Windows 11 Tier A и Windows 10 22H2 Tier B, включая notifications, taskbar badge, DPI, High Contrast, Narrator, keyboard-only, Snap Layouts и multi-monitor.
 - Security QA проверяет notification privacy и отсутствие bearer tokens in URL.
 
@@ -358,6 +362,7 @@ Never:
 - Repository имеет source-of-truth specs и ADRs.
 - First code skeleton можно создать без повторного решения stack, module boundaries, security model или QA gates.
 - Windows 10/11 support tiers зафиксированы, а Windows-native behavior вынесен в отдельную спецификацию.
+- Дизайн-система зафиксирована: layout, Android palette, glass rules и визуальные QA-референсы вынесены в `DESIGN_SYSTEM.md`.
 - У каждой P0 feature есть owner doc section и test strategy.
 - Каждый upstream contract имеет named source document.
 - Qt/C++ рассмотрены явно, а не оставлены будущей ambiguity.

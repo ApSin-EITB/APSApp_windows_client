@@ -68,6 +68,38 @@ Future:
 - Tray icon, если реализован и approved ADR существует.
 - File picker/save picker, drag/drop и clipboard paste.
 
+## Матрица visual QA
+
+Visual QA выполняется по [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md). Нельзя ставить `QA PASS` визуальному слою только потому, что controls видны: нужно проверить palette, density, layout, glass source/overlay и fallback.
+
+### Android-референсы
+
+- Темный список чатов: `F:\APSApp_project\QA\tmp\qa\app-performance-benchmark-2026-05-26-run01\phone-current-screen.png`
+- Темные настройки: `F:\APSApp_project\QA\tmp\qa\appearance-optimization-visual-2026-05-26-run03\5554-settings-home.png`
+- Светлая appearance-поверхность: `F:\APSApp_project\QA\tmp\qa\appearance-optimization-visual-2026-05-26-run03\5554-appearance-light.png`
+- Темный direct chat: `F:\APSApp_project\APSApp_android_app\QA\tmp\reply-author-dark-2026-05-19\direct-chat.png`
+- Темные comments/media: `F:\APSApp_project\APSApp_android_app\QA\tmp\post-comments-reply-2026-05-19-run01\24-after-data-fix-comments-screen.png`
+
+### Обязательные visual passes
+
+- Windows 11 dark: shell, chat list, direct chat, comments/media, settings, calls.
+- Windows 11 light: shell, chat list, direct chat, settings.
+- Windows 10 dark/light fallback: same IA без Mica dependency.
+- Transparency off: boundaries, badges, composer, context strip и buttons остаются читаемыми.
+- High Contrast: system colors, focus states, readable text, no color-only status.
+- DPI 100%, 125%, 150%, 200%.
+- Snap left/right и 1024/1366/1920 widths.
+- RU/EN text fit для headers, buttons, rows, composer banners.
+
+### Glass-specific checks
+
+- Header и composer блюрят реальный scrolled content/source, а не пустой фон.
+- Settings header/bottom dock блюрят real rows при scroll.
+- Внутри blur source нет nested live blur; используются static frosted fills.
+- Live blur radius не выше 34 DIP.
+- При выключенной transparency используется static frosted fill из design tokens.
+- Нет Telegram copy: цвета, row layout, header composition и icons не совпадают 1:1 с Telegram.
+
 ## Automated gates
 
 Managed code:

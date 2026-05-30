@@ -21,6 +21,16 @@
   - Проверка: UI smoke test открывает каждый route.
   - Файлы: `src/APSApp.Windows`.
 
+- [ ] Задача: добавить design token resource layer.
+  - Приемка: palette, glass brushes, typography aliases, spacing/radius tokens заведены по `DESIGN_SYSTEM.md`; hardcoded colors вне token layer отсутствуют.
+  - Проверка: snapshot/resource unit test или static check; manual dark/light smoke.
+  - Файлы: `src/APSApp.Windows/Resources`, design token helpers.
+
+- [ ] Задача: собрать APS desktop shell layout skeleton.
+  - Приемка: APS rail, list pane, content stage и optional context pane работают на compact/normal/wide widths; layout не копирует Telegram визуально.
+  - Проверка: UI smoke screenshots на 1024, 1366, 1920 и Snap left/right.
+  - Файлы: `src/APSApp.Windows`.
+
 - [ ] Задача: добавить Windows platform adapters skeleton.
   - Приемка: существуют interfaces для activation, windowing, notifications, protected secrets, file interaction, packaging info и accessibility diagnostics.
   - Проверка: unit tests на fake adapters и manual smoke single-instance launch.
@@ -79,7 +89,7 @@
 
 - [ ] Задача: Chat list repository and UI.
   - Приемка: cached и live chat snapshots render with unread/pin/mute/typing/preview.
-  - Проверка: repository tests и UI automation.
+  - Проверка: repository tests, UI automation и visual QA по dark chat list reference из `DESIGN_SYSTEM.md`.
   - Файлы: messenger, Windows views.
 
 - [ ] Задача: Direct text outbox.
